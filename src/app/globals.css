@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7fbff;
+  --foreground: #15314f;
+  --ink: #113250;
+  --muted: #617287;
+  --brand-blue: #0767c9;
+  --brand-blue-strong: #004f9f;
+  --brand-cyan: #22b4df;
+  --brand-warm: #f6bf3f;
+  --brand-warm-strong: #eba922;
+  --brand-coral: #f27b58;
+  --brand-green: #5dbb9a;
+  --soft-blue: #eaf6ff;
+  --soft-warm: #fff7de;
+  --line: #d7e6f3;
+  --ring: #198ed9;
+  --radius: 8px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Inter", "Manrope", "Aptos", "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--background);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(34, 180, 223, 0.16), transparent 26rem),
+    radial-gradient(circle at 86% 12%, rgba(246, 191, 63, 0.2), transparent 18rem),
+    linear-gradient(180deg, #f7fbff 0%, #ffffff 42%, #f7fbff 100%);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: rgba(246, 191, 63, 0.45);
+  color: var(--ink);
+}
+
+.section-shell {
+  margin-inline: auto;
+  width: min(100% - 2rem, 1180px);
+}
+
+.section-y {
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+.soft-grid {
+  background-image:
+    linear-gradient(rgba(7, 103, 201, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(7, 103, 201, 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.glass {
+  border: 1px solid rgba(215, 230, 243, 0.8);
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 24px 70px rgba(16, 48, 82, 0.1);
+  backdrop-filter: blur(18px);
+}
+
+.premium-ring {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.8),
+    0 24px 70px rgba(7, 103, 201, 0.22);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.map-frame iframe {
+  border: 0;
+  height: 100%;
+  width: 100%;
+}
+
+section[id] {
+  scroll-margin-top: 6.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

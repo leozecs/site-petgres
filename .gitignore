@@ -1,0 +1,13 @@
+.next
+node_modules
+out
+dist
+.tmp-qa
+debug.log
+next-server.*
+*.tsbuildinfo
+.env
+.env*
+!.env.example
+.pnpm-store
+petgres-landing.zip
