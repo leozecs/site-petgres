@@ -6,16 +6,19 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   metadataBase: new URL("https://petgres.com.br"),
   title: {
-    default: "Petgres | Petshop na Vila Mariana",
+    default: "Petgres | Pet Shop na Vila Mariana",
     template: "%s | Petgres",
   },
   description: siteConfig.description,
   applicationName: "Petgres",
   keywords: [
     "Petgres",
-    "petshop Vila Mariana",
-    "banho e tosa Vila Mariana",
-    "petshop São Paulo",
+    "Pet Shop Vila Mariana",
+    "Banho e Tosa Vila Mariana",
+    "Veterinário Vila Mariana",
+    "Pet Shop São Paulo",
+    "Rua Juá 160",
+    "Vila Mariana SP",
     "acessórios pet",
     "produtos pet",
   ],
@@ -44,7 +47,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Petgres | Petshop na Vila Mariana",
+    title: "Petgres | Pet Shop na Vila Mariana",
     description: siteConfig.description,
     images: ["/assets/petgres-hero-pets.png"],
   },
@@ -76,9 +79,43 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const localBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "PetStore",
+    name: siteConfig.name,
+    description: siteConfig.description,
+    image: "https://petgres.com.br/assets/petgres-logo-512.png",
+    url: "https://petgres.com.br",
+    telephone: `+${siteConfig.whatsapp}`,
+    email: siteConfig.email,
+    sameAs: [siteConfig.instagramUrl],
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: siteConfig.streetAddress,
+      addressLocality: siteConfig.city,
+      addressRegion: siteConfig.state,
+      addressCountry: "BR",
+    },
+    areaServed: ["Vila Mariana", "São Paulo", "Rua Juá 160"],
+    makesOffer: [
+      "Banho e tosa",
+      "Produtos pet",
+      "Acessórios pet",
+      "Cuidados e higiene pet",
+    ],
+  };
+
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(localBusinessJsonLd),
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

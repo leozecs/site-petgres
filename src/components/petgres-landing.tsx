@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   AtSign,
   BadgeCheck,
@@ -11,25 +11,32 @@ import {
   Camera,
   Cat,
   CheckCircle2,
+  CircleHelp,
+  ClipboardCheck,
   Dog,
   Droplets,
   ExternalLink,
   Gift,
   Heart,
+  ImageIcon,
   Mail,
+  MapPinned,
   MapPin,
   Menu,
   MessageCircle,
+  MessageCircleHeart,
   Navigation,
   PackageCheck,
   PawPrint,
   Phone,
   Quote,
   Scissors,
+  Send,
   ShieldCheck,
   ShoppingBag,
   Sparkles,
   Star,
+  Stethoscope,
   Store,
   Users,
   Wind,
@@ -40,7 +47,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { siteConfig, whatsappUrl } from "@/lib/site";
+import { ctaHref, siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -146,10 +153,62 @@ const differentials: IconItem[] = [
 ];
 
 const galleryPlaceholders = [
-  { title: "Ambiente da loja", icon: Store, color: "bg-[#eaf6ff]" },
-  { title: "Banho e tosa", icon: Scissors, color: "bg-[#fff7de]" },
-  { title: "Produtos e acessórios", icon: ShoppingBag, color: "bg-[#eefaf4]" },
+  { title: "Fachada na Rua Juá", icon: Store, color: "bg-[#eaf6ff]" },
+  { title: "Equipe no atendimento", icon: Users, color: "bg-[#fff7de]" },
+  { title: "Banho e tosa em processo", icon: Scissors, color: "bg-[#eefaf4]" },
   { title: "Pets atendidos", icon: Dog, color: "bg-[#fff1ea]" },
+];
+
+const trustSignals = [
+  {
+    title: "Rua Juá, 160",
+    description: "Atendimento local na Vila Mariana, São Paulo/SP.",
+    icon: MapPinned,
+  },
+  {
+    title: "Agendamento direto",
+    description: "Conversa objetiva pelo WhatsApp, sem formulário frio.",
+    icon: MessageCircleHeart,
+  },
+  {
+    title: "Rotina com cuidado",
+    description: "Processo de banho e tosa pensado para reduzir estresse.",
+    icon: ClipboardCheck,
+  },
+];
+
+const careProofs = [
+  "Recepção atenta antes de iniciar o banho e tosa.",
+  "Avaliação do comportamento e das necessidades do pet.",
+  "Comunicação simples pelo WhatsApp antes do agendamento.",
+  "Estrutura preparada para destacar fotos reais da loja, equipe e pets.",
+];
+
+const localQuestions = [
+  {
+    question: "Onde fica a Petgres na Vila Mariana?",
+    answer:
+      "A Petgres fica na Rua Juá, 160, Vila Mariana, em São Paulo/SP, com acesso fácil para moradores e trabalhadores da região.",
+    icon: MapPin,
+    href: siteConfig.mapsUrl,
+    label: "Como chegar",
+  },
+  {
+    question: "Como agendar banho e tosa na Vila Mariana?",
+    answer:
+      "O agendamento atual é feito pelo WhatsApp. A conversa já começa com contexto para facilitar horários, dúvidas e próximos passos.",
+    icon: Scissors,
+    href: ctaHref("schedule"),
+    label: "Agendar banho e tosa",
+  },
+  {
+    question: "Preciso de veterinário na Vila Mariana. A Petgres atende?",
+    answer:
+      "Confirme pelo WhatsApp a disponibilidade e a melhor orientação no momento. O site não promete consulta veterinária sem confirmação da loja.",
+    icon: Stethoscope,
+    href: ctaHref("veterinaryAvailability"),
+    label: "Confirmar disponibilidade",
+  },
 ];
 
 const container = {
@@ -166,15 +225,10 @@ const item = {
   visible: { opacity: 1, y: 0 },
 };
 
-const waSchedule = whatsappUrl(
-  "Olá, Petgres! Gostaria de agendar um atendimento para banho e tosa.",
-);
-const waGeneral = whatsappUrl(
-  "Olá, Petgres! Vim pelo site e gostaria de falar com vocês.",
-);
-const waProducts = whatsappUrl(
-  "Olá, Petgres! Gostaria de consultar a disponibilidade de produtos e acessórios.",
-);
+const waSchedule = ctaHref("schedule");
+const waGeneral = ctaHref("general");
+const waProducts = ctaHref("products");
+const waTrust = ctaHref("trust");
 
 function MotionBlock({
   children,
@@ -259,11 +313,18 @@ function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4">
       <div
         className={cn(
-          "mx-auto flex w-full max-w-[1180px] items-center justify-between rounded-full px-4 py-3 transition-all duration-300",
+          "relative z-10 mx-auto flex w-full max-w-[1180px] items-center justify-between rounded-full px-4 py-3 transition-all duration-300",
           scrolled ? "glass" : "border border-transparent bg-white/52 backdrop-blur-sm",
         )}
       >
@@ -323,25 +384,49 @@ function Header() {
         </Button>
       </div>
 
-      {open ? (
-        <div
-          id="mobile-menu"
-          className="glass mx-auto mt-3 w-[calc(100%-0.5rem)] max-w-[1180px] rounded-[8px] p-3 lg:hidden"
-        >
-          <nav className="grid gap-1" aria-label="Navegação mobile">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="rounded-[8px] px-4 py-3 text-sm font-semibold text-[var(--ink)] hover:bg-[var(--soft-blue)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        </div>
-      ) : null}
+      <AnimatePresence>
+        {open ? (
+          <>
+            <motion.button
+              type="button"
+              aria-label="Fechar menu ao tocar fora"
+              className="fixed inset-0 z-0 bg-[rgba(242,248,252,0.86)] backdrop-blur-[6px] lg:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              onClick={() => setOpen(false)}
+            />
+            <motion.div
+              id="mobile-menu"
+              className="glass relative z-10 mx-auto mt-3 w-[calc(100%-0.5rem)] max-w-[1180px] rounded-[8px] p-3 lg:hidden"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+            >
+              <nav className="grid gap-1" aria-label="Navegação mobile">
+                {navItems.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="rounded-[8px] px-4 py-3 text-sm font-semibold text-[var(--ink)] hover:bg-[var(--soft-blue)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
+              <Button asChild className="mt-3 w-full" size="lg">
+                <a href={waSchedule} target="_blank" rel="noreferrer">
+                  <CalendarCheck />
+                  Agendar Atendimento
+                </a>
+              </Button>
+            </motion.div>
+          </>
+        ) : null}
+      </AnimatePresence>
     </header>
   );
 }
@@ -436,10 +521,9 @@ function Hero() {
         >
           <div className="premium-ring relative aspect-[4/3] overflow-hidden rounded-[8px] bg-white">
             <Image
-              src="/assets/petgres-hero-pets.png"
+              src="/assets/petgres-hero-pets.webp"
               alt="Cachorro e gato em ambiente limpo de cuidado pet"
               fill
-              priority
               sizes="(min-width: 1024px) 520px, 92vw"
               className="object-cover"
             />
@@ -483,6 +567,36 @@ function Hero() {
   );
 }
 
+function TrustStrip() {
+  return (
+    <section className="bg-white px-4 py-5">
+      <div className="section-shell grid gap-3 md:grid-cols-3">
+        {trustSignals.map((signal) => (
+          <a
+            key={signal.title}
+            href={signal.title === "Agendamento direto" ? waGeneral : "#localizacao"}
+            target={signal.title === "Agendamento direto" ? "_blank" : undefined}
+            rel={signal.title === "Agendamento direto" ? "noreferrer" : undefined}
+            className="group flex items-start gap-3 rounded-[8px] border border-[var(--line)] bg-[#f7fbff] p-4 transition duration-300 hover:-translate-y-0.5 hover:border-[var(--brand-blue)] hover:bg-white hover:shadow-[0_16px_40px_rgba(7,103,201,0.1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+          >
+            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white text-[var(--brand-blue)] shadow-sm">
+              <signal.icon className="size-5" />
+            </span>
+            <span>
+              <strong className="block text-sm font-bold text-[var(--ink)]">
+                {signal.title}
+              </strong>
+              <span className="mt-1 block text-sm leading-5 text-[var(--muted)]">
+                {signal.description}
+              </span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Services() {
   return (
     <section id="servicos" className="section-y bg-white px-4">
@@ -507,6 +621,14 @@ function Services() {
             </MotionBlock>
           ))}
         </div>
+        <MotionBlock className="mt-10 flex justify-center">
+          <Button asChild variant="secondary">
+            <a href={waTrust} target="_blank" rel="noreferrer">
+              <MessageCircle />
+              Conversar antes de agendar
+            </a>
+          </Button>
+        </MotionBlock>
       </div>
     </section>
   );
@@ -558,6 +680,61 @@ function Grooming() {
                 <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
                   Atendimento organizado para conforto e previsibilidade.
                 </p>
+              </div>
+            ))}
+          </div>
+        </MotionBlock>
+      </div>
+    </section>
+  );
+}
+
+function CareProof() {
+  return (
+    <section className="bg-white px-4 py-14 sm:py-18">
+      <div className="section-shell grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+        <MotionBlock>
+          <div className="rounded-[8px] border border-[var(--line)] bg-[#f7fbff] p-6 sm:p-8">
+            <Badge>
+              <ShieldCheck className="size-3.5" />
+              Confiança antes do agendamento
+            </Badge>
+            <h2 className="mt-5 text-balance text-3xl font-bold leading-tight text-[var(--ink)] sm:text-4xl">
+              A decisão não é estética. É sobre sentir segurança.
+            </h2>
+            <p className="mt-4 text-base leading-7 text-[var(--muted)]">
+              Quem chega pelo Instagram precisa entender rápido onde fica a
+              Petgres, como o pet será recebido e qual é o próximo passo. Por
+              isso, cada CTA leva para uma conversa contextual no WhatsApp.
+            </p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Button asChild>
+                <a href={waTrust} target="_blank" rel="noreferrer">
+                  <MessageCircle />
+                  Tirar dúvidas pelo WhatsApp
+                </a>
+              </Button>
+              <Button asChild variant="secondary">
+                <a href="#galeria">
+                  <ImageIcon />
+                  Ver estrutura de fotos
+                </a>
+              </Button>
+            </div>
+          </div>
+        </MotionBlock>
+
+        <MotionBlock delay={0.08}>
+          <div className="grid gap-3">
+            {careProofs.map((proof, index) => (
+              <div
+                key={proof}
+                className="flex items-start gap-4 rounded-[8px] border border-[var(--line)] bg-white p-4 shadow-sm"
+              >
+                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[var(--soft-warm)] text-sm font-bold text-[var(--ink)]">
+                  {index + 1}
+                </span>
+                <p className="text-sm leading-6 text-[var(--muted)]">{proof}</p>
               </div>
             ))}
           </div>
@@ -633,6 +810,14 @@ function Differentials() {
             </MotionBlock>
           ))}
         </div>
+        <MotionBlock className="mt-10 flex justify-center">
+          <Button asChild>
+            <a href={waTrust} target="_blank" rel="noreferrer">
+              <MessageCircle />
+              Entender o atendimento
+            </a>
+          </Button>
+        </MotionBlock>
       </div>
     </section>
   );
@@ -640,15 +825,31 @@ function Differentials() {
 
 function Gallery() {
   return (
-    <section className="section-y px-4">
+    <section id="galeria" className="section-y px-4">
       <div className="section-shell">
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-          <SectionIntro
-            align="left"
-            eyebrow="Galeria"
-            title="Uma estrutura pronta para receber fotos reais da Petgres."
-            description="A área já está preparada para mostrar ambiente, produtos, pets atendidos e detalhes do banho e tosa assim que o acervo real estiver disponível."
-          />
+          <div>
+            <SectionIntro
+              align="left"
+              eyebrow="Galeria"
+              title="Fotos reais devem ser a prova visual da Petgres."
+              description="A estrutura prioriza fachada, equipe, processo de banho e tosa e pets atendidos. Enquanto o acervo real não entra, nada aqui inventa depoimentos ou bastidores."
+            />
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Button asChild variant="secondary">
+                <a href={siteConfig.instagramUrl} target="_blank" rel="noreferrer">
+                  <AtSign />
+                  Ver Instagram
+                </a>
+              </Button>
+              <Button asChild>
+                <a href={waGeneral} target="_blank" rel="noreferrer">
+                  <MessageCircle />
+                  Pedir fotos pelo WhatsApp
+                </a>
+              </Button>
+            </div>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {galleryPlaceholders.map((photo, index) => (
               <MotionBlock key={photo.title} delay={index * 0.05}>
@@ -709,6 +910,55 @@ function Testimonials() {
             </Button>
           </div>
         </MotionBlock>
+      </div>
+    </section>
+  );
+}
+
+function LocalSeoQuestions() {
+  return (
+    <section className="section-y px-4">
+      <div className="section-shell">
+        <div className="grid gap-10 lg:grid-cols-[0.76fr_1.24fr] lg:items-start">
+          <SectionIntro
+            align="left"
+            eyebrow="SEO local"
+            title="Pet shop na Vila Mariana, com resposta rápida pelo WhatsApp."
+            description="As dúvidas mais importantes precisam ser respondidas sem rodeio: onde fica, como agendar e como confirmar serviços antes de sair de casa."
+          />
+
+          <div className="grid gap-4">
+            {localQuestions.map((item) => (
+              <MotionBlock key={item.question}>
+                <div className="rounded-[8px] border border-[var(--line)] bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_45px_rgba(7,103,201,0.1)]">
+                  <div className="flex items-start gap-4">
+                    <span className="grid size-11 shrink-0 place-items-center rounded-full bg-[var(--soft-blue)] text-[var(--brand-blue)]">
+                      <item.icon className="size-5" />
+                    </span>
+                    <div>
+                      <h3 className="text-lg font-bold text-[var(--ink)]">
+                        {item.question}
+                      </h3>
+                      <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                        {item.answer}
+                      </p>
+                    </div>
+                  </div>
+                  <Button asChild className="mt-5" variant="secondary">
+                    <a
+                      href={item.href}
+                      target={item.href.startsWith("http") ? "_blank" : undefined}
+                      rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                    >
+                      <CircleHelp />
+                      {item.label}
+                    </a>
+                  </Button>
+                </div>
+              </MotionBlock>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -885,6 +1135,42 @@ function FinalCta() {
   );
 }
 
+function FloatingWhatsApp() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const updateVisibility = () => {
+      const shouldShow = window.scrollY > 420;
+      setVisible((current) => (current === shouldShow ? current : shouldShow));
+    };
+
+    updateVisibility();
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    return () => window.removeEventListener("scroll", updateVisibility);
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {visible ? (
+        <motion.a
+          href={waSchedule}
+          target="_blank"
+          rel="noreferrer"
+          initial={{ opacity: 0, y: 18, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 12, scale: 0.98 }}
+          transition={{ duration: 0.28, ease: "easeOut" }}
+          className="fixed inset-x-4 bottom-[calc(0.875rem+env(safe-area-inset-bottom))] z-50 flex h-12 items-center justify-center gap-2 rounded-full bg-[var(--brand-blue)] px-5 text-sm font-bold text-white shadow-[0_18px_45px_rgba(0,83,178,0.32)] ring-1 ring-white/70 md:hidden"
+          aria-label="Agendar atendimento pelo WhatsApp"
+        >
+          <Send className="size-4" />
+          Agendar pelo WhatsApp
+        </motion.a>
+      ) : null}
+    </AnimatePresence>
+  );
+}
+
 function Footer() {
   return (
     <footer className="border-t border-[var(--line)] bg-white px-4 py-10">
@@ -955,19 +1241,24 @@ function Footer() {
 
 export function PetgresLanding() {
   return (
-    <main>
+    <main className="pb-20 md:pb-0">
       <Header />
       <Hero />
+      <TrustStrip />
       <Services />
       <Grooming />
+      <CareProof />
       <Products />
       <Differentials />
       <Gallery />
       <Testimonials />
+      <LocalSeoQuestions />
       <Location />
       <Contact />
       <FinalCta />
       <Footer />
+      <FloatingWhatsApp />
     </main>
   );
 }
+
