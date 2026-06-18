@@ -9,10 +9,12 @@ import {
   CalendarCheck,
   CheckCircle2,
   ChevronDown,
+  ClipboardCheck,
   Clock,
   Droplets,
   ExternalLink,
   Gift,
+  HeartPulse,
   Mail,
   MapPin,
   Menu,
@@ -20,11 +22,15 @@ import {
   PackageCheck,
   PawPrint,
   Phone,
+  Pill,
   Scissors,
   Send,
+  ShieldCheck,
   ShoppingBag,
   Sparkles,
   Star,
+  Stethoscope,
+  Syringe,
   Users,
   Wind,
   X,
@@ -40,6 +46,7 @@ const navItems = [
   { label: "Início", href: "#inicio" },
   { label: "Serviços", href: "#servicos" },
   { label: "Banho e Tosa", href: "#banho-e-tosa" },
+  { label: "Veterinária", href: "#veterinaria" },
   { label: "Produtos", href: "#produtos" },
   { label: "Depoimentos", href: "#depoimentos" },
   { label: "Localização", href: "#localizacao" },
@@ -114,6 +121,52 @@ const services: Array<IconItem & { highlight: string }> = [
       "Orientação próxima para manter seu pet limpo, cheiroso e protegido.",
     highlight: "Sem pressa",
     icon: Droplets,
+  },
+  {
+    title: "Veterinária",
+    description:
+      "Consultas, vacinas, vermífugos e atestados com veterinário responsável.",
+    highlight: "Consulte agenda",
+    icon: Stethoscope,
+  },
+];
+
+const vetServices: Array<IconItem & { tag: string }> = [
+  {
+    title: "Consulta clínica",
+    description: "Avaliação geral com veterinário responsável, em ambiente calmo e seguro.",
+    tag: "Agendamento",
+    icon: Stethoscope,
+  },
+  {
+    title: "Vacinação",
+    description: "Calendário vacinal para cães e gatos: V8, V10, antirrábica e mais.",
+    tag: "Preventivo",
+    icon: Syringe,
+  },
+  {
+    title: "Vermífugos & antipulgas",
+    description: "Orientação e aplicação conforme idade, peso e necessidade do pet.",
+    tag: "Cuidado",
+    icon: Pill,
+  },
+  {
+    title: "Atestados de saúde",
+    description: "Para viagem, hospedagem, creche ou exigências de adestramento.",
+    tag: "Documento",
+    icon: ClipboardCheck,
+  },
+  {
+    title: "Check-up de rotina",
+    description: "Avaliação preventiva para acompanhar a saúde do seu pet ao longo do ano.",
+    tag: "Preventivo",
+    icon: HeartPulse,
+  },
+  {
+    title: "Orientação preventiva",
+    description: "Dúvidas sobre alimentação, comportamento e cuidados do dia a dia.",
+    tag: "Orientação",
+    icon: ShieldCheck,
   },
 ];
 
@@ -257,6 +310,11 @@ const faqItems = [
     question: "Vocês atendem gatos?",
     answer:
       "Sim. Atendemos cães e gatos com processo de banho, secagem e higiene adaptado ao temperamento de cada pet.",
+  },
+  {
+    question: "A Petgres tem atendimento veterinário?",
+    answer:
+      "Sim. Oferecemos consulta clínica, vacinação, vermífugos, atestados de saúde, check-up de rotina e orientação preventiva. O atendimento é feito conforme a agenda do veterinário responsável — confirme a disponibilidade pelo WhatsApp.",
   },
   {
     question: "Quais formas de pagamento aceitam?",
@@ -690,11 +748,10 @@ function TrustStrip() {
       external: true,
     },
     {
-      title: "Atendimento humano",
-      description: "Conversa direta, sem formulário frio",
-      icon: Sparkles,
-      href: waTrust,
-      external: true,
+      title: "Cuidado veterinário",
+      description: "Consulta, vacinas e check-up de rotina",
+      icon: Stethoscope,
+      href: "#veterinaria",
     },
   ];
 
@@ -744,7 +801,7 @@ function Services() {
           description="A Petgres combina cuidado no banho e tosa com produtos e acessórios para deixar o dia a dia mais prático, confortável e seguro."
         />
 
-        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {services.map((service, index) => (
             <MotionBlock key={service.title} delay={index * 0.06}>
               <article className="lift-on-hover group relative flex h-full flex-col overflow-hidden rounded-[16px] border border-[var(--line)] bg-white p-6 shadow-[var(--shadow-xs)] hover:border-[var(--brand-blue)] hover:shadow-[var(--shadow-lg)]">
@@ -860,6 +917,91 @@ function Grooming() {
               </li>
             ))}
           </ol>
+        </MotionBlock>
+      </div>
+    </section>
+  );
+}
+
+function Veterinaria() {
+  const waVet = ctaHref("veterinaryConsult");
+  const waVetAvailability = ctaHref("veterinaryAvailability");
+
+  return (
+    <section
+      id="veterinaria"
+      className="relative section-y bg-gradient-to-b from-white via-[#f3faff] to-white px-4 overflow-hidden"
+    >
+      <div className="absolute inset-0 paw-pattern opacity-40" aria-hidden />
+      <div
+        className="absolute -left-32 top-32 -z-10 h-[360px] w-[360px] rounded-full bg-gradient-to-tr from-[var(--brand-green)]/15 to-transparent blur-3xl"
+        aria-hidden
+      />
+      <div
+        className="absolute -right-32 bottom-32 -z-10 h-[360px] w-[360px] rounded-full bg-gradient-to-bl from-[var(--brand-blue)]/15 to-transparent blur-3xl"
+        aria-hidden
+      />
+
+      <div className="section-shell relative">
+        <SectionIntro
+          eyebrow="Veterinária"
+          title="Cuidado veterinário com olhar próximo."
+          description="Consultas, vacinas e cuidados de rotina para manter seu pet saudável o ano todo. Atendimento humano com profissional responsável."
+        />
+
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {vetServices.map((service, index) => (
+            <MotionBlock key={service.title} delay={index * 0.05}>
+              <article className="lift-on-hover group relative flex h-full flex-col overflow-hidden rounded-[16px] border border-[var(--line)] bg-white p-6 shadow-[var(--shadow-xs)] hover:border-[var(--brand-blue)] hover:shadow-[var(--shadow-lg)]">
+                <div className="absolute right-5 top-5 inline-flex items-center gap-1 rounded-full bg-[var(--soft-warm)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--brand-warm-strong)]">
+                  {service.tag}
+                </div>
+                <div className="mb-5 grid size-12 place-items-center rounded-[12px] bg-gradient-to-br from-[var(--soft-blue)] to-white text-[var(--brand-blue)] ring-1 ring-[var(--line)] transition group-hover:from-[var(--brand-blue)] group-hover:to-[var(--brand-blue)] group-hover:text-white group-hover:ring-[var(--brand-blue)]">
+                  <service.icon className="size-6" />
+                </div>
+                <h3 className="text-lg font-bold tracking-tight text-[var(--ink)]">
+                  {service.title}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                  {service.description}
+                </p>
+              </article>
+            </MotionBlock>
+          ))}
+        </div>
+
+        <MotionBlock className="mt-12">
+          <div className="rounded-[16px] border border-[var(--line)] bg-white p-6 shadow-[var(--shadow-sm)] sm:p-8">
+            <div className="flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex items-start gap-4">
+                <span className="grid size-12 shrink-0 place-items-center rounded-[12px] bg-[var(--soft-blue)] text-[var(--brand-blue)]">
+                  <CalendarCheck className="size-6" />
+                </span>
+                <div>
+                  <p className="text-base font-bold text-[var(--ink)] sm:text-lg">
+                    Pronto pra cuidar do seu pet?
+                  </p>
+                  <p className="mt-1 text-sm leading-6 text-[var(--muted)]">
+                    Atendimento veterinário conforme agenda do profissional responsável. Confirme disponibilidade pelo WhatsApp.
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row lg:shrink-0">
+                <Button asChild>
+                  <a href={waVet} target="_blank" rel="noreferrer">
+                    <Stethoscope />
+                    Agendar consulta
+                  </a>
+                </Button>
+                <Button asChild variant="secondary">
+                  <a href={waVetAvailability} target="_blank" rel="noreferrer">
+                    <WhatsAppIcon className="size-4 text-[#25D366]" />
+                    Confirmar disponibilidade
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
         </MotionBlock>
       </div>
     </section>
@@ -1502,6 +1644,7 @@ export function PetgresLanding() {
         <TrustStrip />
         <Services />
         <Grooming />
+        <Veterinaria />
         <Products />
         <Gallery />
         <Testimonials />

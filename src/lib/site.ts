@@ -40,6 +40,10 @@ const ctaMessages = {
     "Olá, Petgres! Estou no bairro Saúde e gostaria de atendimento na Rua Juá, 160.",
   veterinaryAvailability:
     "Olá, Petgres! Gostaria de confirmar disponibilidade ou orientação sobre atendimento veterinário.",
+  veterinaryConsult:
+    "Olá, Petgres! Gostaria de agendar uma consulta veterinária para meu pet.",
+  veterinaryVaccine:
+    "Olá, Petgres! Gostaria de consultar sobre vacinação para meu pet.",
 } as const;
 
 export type CtaKey = keyof typeof ctaMessages;
