@@ -2,13 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   BadgeCheck,
   Bone,
@@ -313,10 +307,9 @@ function MotionBlock({
 
   return (
     <motion.div
-      initial={reduceMotion ? false : { opacity: 0, y: 22 }}
-      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.55, ease: [0.22, 0.61, 0.36, 1], delay }}
+      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+      animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: [0.22, 0.61, 0.36, 1], delay }}
       className={className}
     >
       {children}
@@ -510,9 +503,6 @@ function Header() {
 
 function Hero() {
   const reduceMotion = useReducedMotion();
-  const { scrollY } = useScroll();
-  const photoY = useTransform(scrollY, [0, 500], [0, 60]);
-  const decoY = useTransform(scrollY, [0, 500], [0, -30]);
 
   const floatingItems = [
     { label: "Banho e Tosa", className: "-left-2 top-6", color: "text-[var(--brand-blue)]" },
@@ -528,12 +518,11 @@ function Hero() {
     >
       <div className="absolute inset-0 -z-10 soft-grid opacity-60" aria-hidden />
       <div className="absolute inset-0 -z-10 paw-pattern opacity-50" aria-hidden />
-      <motion.div
+      <div
         className="absolute -right-32 -top-32 -z-10 h-[420px] w-[420px] rounded-full bg-gradient-to-br from-[#f6bf3f]/20 via-[#22b4df]/14 to-transparent blur-3xl"
-        style={reduceMotion ? undefined : { y: decoY }}
         aria-hidden
       />
-      <motion.div
+      <div
         className="absolute -left-32 bottom-0 -z-10 h-[360px] w-[360px] rounded-full bg-gradient-to-tr from-[#0767c9]/14 to-transparent blur-3xl"
         aria-hidden
       />
@@ -620,7 +609,6 @@ function Hero() {
           animate={reduceMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
           className="relative mx-auto w-full max-w-xl"
-          style={reduceMotion ? undefined : { y: photoY }}
         >
           <div className="premium-frame relative">
             <div className="premium-ring relative aspect-[4/3] overflow-hidden rounded-[12px] bg-white">
@@ -1039,7 +1027,7 @@ function Testimonials() {
             >
               <motion.figure
                 initial={{ rotate: testimonial.rotation }}
-                whileInView={{ rotate: testimonial.rotation }}
+                animate={{ rotate: testimonial.rotation }}
                 whileHover={{ rotate: 0, scale: 1.03 }}
                 transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 className="polaroid w-full max-w-[300px] rounded-[6px]"
