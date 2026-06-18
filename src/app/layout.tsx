@@ -6,19 +6,20 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   metadataBase: new URL("https://petgres.com.br"),
   title: {
-    default: "Petgres | Pet Shop na Vila Mariana",
+    default: "Petgres | Pet Shop no bairro Saúde",
     template: "%s | Petgres",
   },
   description: siteConfig.description,
   applicationName: "Petgres",
   keywords: [
     "Petgres",
-    "Pet Shop Vila Mariana",
-    "Banho e Tosa Vila Mariana",
-    "Veterinário Vila Mariana",
+    "Pet Shop Saúde",
+    "Banho e Tosa Saúde",
+    "Pet Shop Bosque da Saúde",
+    "Pet Shop Praça da Árvore",
     "Pet Shop São Paulo",
     "Rua Juá 160",
-    "Vila Mariana SP",
+    "Saúde SP",
     "acessórios pet",
     "produtos pet",
   ],
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Petgres | Cuidado, carinho e bem-estar para o seu pet",
     description:
-      "Banho e tosa, produtos e acessórios com atendimento dedicado na Vila Mariana, São Paulo.",
+      "Banho e tosa, produtos e acessórios com atendimento dedicado no bairro Saúde, São Paulo.",
     url: "/",
     siteName: "Petgres",
     locale: "pt_BR",
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Petgres | Pet Shop na Vila Mariana",
+    title: "Petgres | Pet Shop no bairro Saúde",
     description: siteConfig.description,
     images: ["/assets/petgres-hero-pets.png"],
   },
@@ -96,7 +97,7 @@ export default function RootLayout({
       addressRegion: siteConfig.state,
       addressCountry: "BR",
     },
-    areaServed: ["Vila Mariana", "São Paulo", "Rua Juá 160"],
+    areaServed: ["Saúde", "Bosque da Saúde", "Praça da Árvore", "São Paulo", "Rua Juá 160"],
     makesOffer: [
       "Banho e tosa",
       "Produtos pet",

@@ -1,42 +1,33 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
-  AtSign,
   BadgeCheck,
   Bone,
   CalendarCheck,
   Camera,
   Cat,
-  CheckCircle2,
-  CircleHelp,
+  ChevronDown,
   ClipboardCheck,
   Dog,
   Droplets,
   ExternalLink,
   Gift,
-  Heart,
-  ImageIcon,
   Mail,
   MapPinned,
   MapPin,
   Menu,
-  MessageCircle,
   MessageCircleHeart,
   Navigation,
   PackageCheck,
   PawPrint,
   Phone,
-  Quote,
   Scissors,
   Send,
-  ShieldCheck,
   ShoppingBag,
   Sparkles,
-  Star,
-  Stethoscope,
   Store,
   Users,
   Wind,
@@ -55,9 +46,44 @@ const navItems = [
   { label: "Serviços", href: "#servicos" },
   { label: "Banho e Tosa", href: "#banho-e-tosa" },
   { label: "Produtos", href: "#produtos" },
+  { label: "Depoimentos", href: "#depoimentos" },
   { label: "Localização", href: "#localizacao" },
   { label: "Contato", href: "#contato" },
 ];
+
+function WhatsAppIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+      fill="currentColor"
+    >
+      <path d="M12.04 2.003c-5.5 0-9.97 4.47-9.97 9.97 0 1.76.46 3.47 1.34 4.98L2 22.003l5.18-1.36a9.94 9.94 0 0 0 4.86 1.27h.01c5.5 0 9.97-4.47 9.97-9.97 0-2.66-1.04-5.17-2.92-7.05a9.92 9.92 0 0 0-7.06-2.89zm0 18.18h-.01a8.27 8.27 0 0 1-4.21-1.15l-.3-.18-3.07.81.82-3-.2-.31a8.23 8.23 0 0 1-1.27-4.39c0-4.55 3.71-8.25 8.26-8.25 2.2 0 4.27.86 5.83 2.42a8.2 8.2 0 0 1 2.42 5.84c0 4.55-3.71 8.21-8.27 8.21zm4.53-6.16c-.25-.12-1.47-.72-1.7-.8-.23-.08-.39-.12-.55.12-.16.25-.63.8-.78.96-.14.16-.29.18-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.38-1.72-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.41-.55-.42h-.47c-.16 0-.41.06-.62.31-.21.25-.81.79-.81 1.94 0 1.14.83 2.24.94 2.4.12.16 1.63 2.49 3.95 3.49.55.24.98.38 1.32.49.55.17 1.05.15 1.45.09.44-.07 1.36-.55 1.55-1.09.19-.54.19-1 .14-1.09-.06-.09-.22-.16-.46-.28z" />
+    </svg>
+  );
+}
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2.5" y="2.5" width="19" height="19" rx="5" />
+      <circle cx="12" cy="12" r="4.2" />
+      <circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
 
 type IconItem = {
   title: string;
@@ -92,63 +118,69 @@ const services: IconItem[] = [
   },
 ];
 
-const groomingSteps = [
-  { title: "Recepção", icon: Users },
-  { title: "Avaliação", icon: BadgeCheck },
-  { title: "Banho", icon: Droplets },
-  { title: "Secagem", icon: Wind },
-  { title: "Tosa", icon: Scissors },
-  { title: "Finalização", icon: Sparkles },
+const groomingSteps: Array<IconItem> = [
+  {
+    title: "Recepção",
+    description:
+      "Boas-vindas tranquilas e cadastro rápido, respeitando o tempo de adaptação do pet.",
+    icon: Users,
+  },
+  {
+    title: "Avaliação",
+    description:
+      "Análise da pelagem, da pele e de cuidados específicos antes de iniciar o banho.",
+    icon: BadgeCheck,
+  },
+  {
+    title: "Banho",
+    description:
+      "Shampoo escolhido para o tipo de pelo, com água em temperatura agradável.",
+    icon: Droplets,
+  },
+  {
+    title: "Secagem",
+    description:
+      "Secadores em potência segura para conforto e proteção da pele do pet.",
+    icon: Wind,
+  },
+  {
+    title: "Tosa",
+    description:
+      "Tosa higiênica ou estética, sempre alinhada com o tutor antes de começar.",
+    icon: Scissors,
+  },
+  {
+    title: "Finalização",
+    description:
+      "Perfume suave, laço ou gravatinha e devolução do pet pronto para casa.",
+    icon: Sparkles,
+  },
 ];
 
-const productCategories: IconItem[] = [
+const productCategories: Array<IconItem & { tag: string }> = [
   {
-    title: "Higiene",
-    description: "Shampoos, itens de limpeza e cuidados para a rotina.",
+    title: "Higiene Premium",
+    description: "Shampoos, condicionadores e itens de limpeza para um cuidado completo.",
+    tag: "Curadoria",
     icon: Droplets,
   },
   {
     title: "Acessórios",
-    description: "Camas, potes, itens de conforto e utilidades pet.",
+    description: "Camas, potes, comedouros e utilidades para o dia a dia do pet.",
+    tag: "Conforto",
     icon: PackageCheck,
   },
   {
     title: "Brinquedos",
-    description: "Opções para enriquecer o dia e gastar energia com segurança.",
+    description: "Diversão e enriquecimento ambiental com segurança garantida.",
+    tag: "Diversão",
     icon: Bone,
   },
   {
-    title: "Guias e coleiras",
-    description: "Itens para passeios mais tranquilos e bem ajustados.",
+    title: "Guias e Coleiras",
+    description: "Passeios mais tranquilos com itens ajustados e resistentes.",
+    tag: "Passeio",
     icon: PawPrint,
-  },
-];
-
-const differentials: IconItem[] = [
-  {
-    title: "Atendimento com carinho",
-    description: "Relação próxima, escuta cuidadosa e atenção aos detalhes.",
-    icon: Heart,
-  },
-  {
-    title: "Vila Mariana",
-    description: "Endereço fácil de chegar para quem vive ou trabalha na região.",
-    icon: MapPin,
-  },
-  {
-    title: "Banho e tosa com cuidado",
-    description: "Processo organizado para conforto, higiene e segurança.",
-    icon: ShieldCheck,
-  },
-  {
-    title: "Produtos selecionados",
-    description: "Curadoria prática para necessidades reais de cães e gatos.",
-    icon: Star,
-  },
-  {
-    title: "Ambiente seguro",
-    description: "Rotina pensada para receber pets com calma e responsabilidade.",
-    icon: CheckCircle2,
   },
 ];
 
@@ -162,7 +194,7 @@ const galleryPlaceholders = [
 const trustSignals = [
   {
     title: "Rua Juá, 160",
-    description: "Atendimento local na Vila Mariana, São Paulo/SP.",
+    description: "Atendimento local no bairro Saúde, São Paulo/SP.",
     icon: MapPinned,
   },
   {
@@ -177,37 +209,63 @@ const trustSignals = [
   },
 ];
 
-const careProofs = [
-  "Recepção atenta antes de iniciar o banho e tosa.",
-  "Avaliação do comportamento e das necessidades do pet.",
-  "Comunicação simples pelo WhatsApp antes do agendamento.",
-  "Estrutura preparada para destacar fotos reais da loja, equipe e pets.",
+const testimonials = [
+  {
+    name: "Carla S.",
+    pet: "Theo",
+    photo: "/assets/testimonials/pet-theo.svg",
+    quote:
+      "O Theo voltou cheirosinho e super calminho. Atendimento atencioso do início ao fim.",
+    rotation: -2.6,
+  },
+  {
+    name: "Renata M.",
+    pet: "Mia",
+    photo: "/assets/testimonials/pet-mia.svg",
+    quote:
+      "A Mia é uma gatinha tímida e foi recebida com toda a paciência. Saiu macia e perfumada.",
+    rotation: 1.6,
+  },
+  {
+    name: "Bruno A.",
+    pet: "Luna",
+    photo: "/assets/testimonials/pet-luna.svg",
+    quote:
+      "Banho e tosa impecáveis. A Luna ama vir aqui — isso já diz tudo sobre o cuidado.",
+    rotation: -1.2,
+  },
 ];
 
-const localQuestions = [
+const faqItems = [
   {
-    question: "Onde fica a Petgres na Vila Mariana?",
+    question: "Onde fica a Petgres?",
     answer:
-      "A Petgres fica na Rua Juá, 160, Vila Mariana, em São Paulo/SP, com acesso fácil para moradores e trabalhadores da região.",
-    icon: MapPin,
-    href: siteConfig.mapsUrl,
-    label: "Como chegar",
+      "Estamos na Rua Juá, 160, bairro Saúde, em São Paulo/SP, com acesso fácil para moradores da Saúde, Bosque da Saúde e Praça da Árvore.",
   },
   {
-    question: "Como agendar banho e tosa na Vila Mariana?",
+    question: "Como agendar banho e tosa?",
     answer:
-      "O agendamento atual é feito pelo WhatsApp. A conversa já começa com contexto para facilitar horários, dúvidas e próximos passos.",
-    icon: Scissors,
-    href: ctaHref("schedule"),
-    label: "Agendar banho e tosa",
+      "O agendamento é feito pelo WhatsApp. A conversa já começa com contexto, facilitando horários, dúvidas e próximos passos.",
   },
   {
-    question: "Preciso de veterinário na Vila Mariana. A Petgres atende?",
+    question: "Vocês atendem gatos?",
     answer:
-      "Confirme pelo WhatsApp a disponibilidade e a melhor orientação no momento. O site não promete consulta veterinária sem confirmação da loja.",
-    icon: Stethoscope,
-    href: ctaHref("veterinaryAvailability"),
-    label: "Confirmar disponibilidade",
+      "Sim. Atendemos cães e gatos com processo de banho, secagem e higiene adaptado ao temperamento de cada pet.",
+  },
+  {
+    question: "Quais formas de pagamento aceitam?",
+    answer:
+      "Trabalhamos com as principais formas de pagamento, incluindo Pix, débito e crédito. Confirme as opções pelo WhatsApp antes de fechar o atendimento.",
+  },
+  {
+    question: "Têm produtos para raças pequenas e grandes?",
+    answer:
+      "Sim. Trabalhamos com curadoria para diferentes portes e necessidades. Consulte a disponibilidade pelo WhatsApp.",
+  },
+  {
+    question: "Posso ir comprar produtos sem agendar?",
+    answer:
+      "Para compra de produtos não é necessário agendar. Apenas o serviço de banho e tosa precisa de horário marcado.",
   },
 ];
 
@@ -345,19 +403,19 @@ function Header() {
           <span className="hidden min-w-0 flex-col leading-none sm:flex">
             <strong className="text-base font-bold text-[var(--ink)]">Petgres</strong>
             <span className="mt-1 text-xs font-medium text-[var(--muted)]">
-              Vila Mariana
+              Bairro Saúde
             </span>
           </span>
         </a>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Navegação principal">
-          {navItems.map((item) => (
+          {navItems.map((nav) => (
             <a
-              key={item.href}
-              href={item.href}
+              key={nav.href}
+              href={nav.href}
               className="rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted)] transition hover:bg-[var(--soft-blue)] hover:text-[var(--brand-blue)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
             >
-              {item.label}
+              {nav.label}
             </a>
           ))}
         </nav>
@@ -406,14 +464,14 @@ function Header() {
               transition={{ duration: 0.22, ease: "easeOut" }}
             >
               <nav className="grid gap-1" aria-label="Navegação mobile">
-                {navItems.map((item) => (
+                {navItems.map((nav) => (
                   <a
-                    key={item.href}
-                    href={item.href}
+                    key={nav.href}
+                    href={nav.href}
                     onClick={() => setOpen(false)}
                     className="rounded-[8px] px-4 py-3 text-sm font-semibold text-[var(--ink)] hover:bg-[var(--soft-blue)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
                   >
-                    {item.label}
+                    {nav.label}
                   </a>
                 ))}
               </nav>
@@ -446,6 +504,7 @@ function Hero() {
       className="relative overflow-hidden px-4 pb-14 pt-28 sm:pt-32 lg:pb-20 lg:pt-36"
     >
       <div className="absolute inset-0 -z-10 soft-grid opacity-60" />
+      <div className="absolute inset-0 -z-10 paw-pattern opacity-50" />
       <div className="section-shell grid items-center gap-10 lg:grid-cols-[1fr_0.9fr]">
         <motion.div
           variants={container}
@@ -456,14 +515,14 @@ function Hero() {
           <motion.div variants={item}>
             <Badge>
               <PawPrint className="size-3.5" />
-              Petshop na Vila Mariana
+              Petshop no bairro Saúde
             </Badge>
           </motion.div>
           <motion.h1
             variants={item}
             className="text-balance mt-5 text-4xl font-bold leading-[1.04] text-[var(--ink)] sm:text-5xl lg:text-6xl"
           >
-            Cuidado, carinho e bem-estar para o seu pet na Vila Mariana.
+            Cuidado, carinho e bem-estar para o seu pet no bairro Saúde.
           </motion.h1>
           <motion.p
             variants={item}
@@ -484,7 +543,7 @@ function Hero() {
             </Button>
             <Button asChild variant="secondary" size="lg">
               <a href={waGeneral} target="_blank" rel="noreferrer">
-                <MessageCircle />
+                <WhatsAppIcon className="size-4 text-[#25D366]" />
                 Falar no WhatsApp
               </a>
             </Button>
@@ -495,7 +554,7 @@ function Hero() {
             aria-label="Destaques da Petgres"
           >
             {[
-              ["Vila Mariana", MapPin],
+              ["Bairro Saúde", MapPin],
               ["Banho e tosa", Scissors],
               ["Produtos pet", ShoppingBag],
             ].map(([label, Icon]) => {
@@ -599,8 +658,11 @@ function TrustStrip() {
 
 function Services() {
   return (
-    <section id="servicos" className="section-y bg-white px-4">
-      <div className="section-shell">
+    <section id="servicos" className="relative section-y bg-white px-4">
+      <div className="absolute inset-0 paw-pattern opacity-50" aria-hidden />
+      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white to-transparent" aria-hidden />
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent" aria-hidden />
+      <div className="section-shell relative">
         <SectionIntro
           eyebrow="Serviços"
           title="Tudo que a rotina do seu pet precisa, com atendimento próximo."
@@ -624,7 +686,7 @@ function Services() {
         <MotionBlock className="mt-10 flex justify-center">
           <Button asChild variant="secondary">
             <a href={waTrust} target="_blank" rel="noreferrer">
-              <MessageCircle />
+              <WhatsAppIcon className="size-4 text-[#25D366]" />
               Conversar antes de agendar
             </a>
           </Button>
@@ -636,8 +698,20 @@ function Services() {
 
 function Grooming() {
   return (
-    <section id="banho-e-tosa" className="section-y px-4">
-      <div className="section-shell grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+    <section id="banho-e-tosa" className="relative section-y px-4 overflow-hidden">
+      <div className="absolute inset-0 -z-10" aria-hidden>
+        <Image
+          src="/assets/petgres-hero-pets.webp"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover opacity-25"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#f7fbff]/95 via-[#f7fbff]/92 to-[#f7fbff]" />
+        <div className="absolute inset-0 paw-pattern opacity-40" />
+      </div>
+
+      <div className="section-shell relative grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <MotionBlock>
           <SectionIntro
             align="left"
@@ -666,7 +740,7 @@ function Grooming() {
             {groomingSteps.map((step, index) => (
               <div
                 key={step.title}
-                className="relative rounded-[8px] border border-[var(--line)] bg-white p-5 shadow-sm"
+                className="relative rounded-[8px] border border-[var(--line)] bg-white/95 p-5 shadow-sm backdrop-blur-sm"
               >
                 <span className="absolute right-4 top-4 text-xs font-bold text-[var(--muted)]">
                   {String(index + 1).padStart(2, "0")}
@@ -678,63 +752,8 @@ function Grooming() {
                   {step.title}
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-                  Atendimento organizado para conforto e previsibilidade.
+                  {step.description}
                 </p>
-              </div>
-            ))}
-          </div>
-        </MotionBlock>
-      </div>
-    </section>
-  );
-}
-
-function CareProof() {
-  return (
-    <section className="bg-white px-4 py-14 sm:py-18">
-      <div className="section-shell grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-        <MotionBlock>
-          <div className="rounded-[8px] border border-[var(--line)] bg-[#f7fbff] p-6 sm:p-8">
-            <Badge>
-              <ShieldCheck className="size-3.5" />
-              Confiança antes do agendamento
-            </Badge>
-            <h2 className="mt-5 text-balance text-3xl font-bold leading-tight text-[var(--ink)] sm:text-4xl">
-              A decisão não é estética. É sobre sentir segurança.
-            </h2>
-            <p className="mt-4 text-base leading-7 text-[var(--muted)]">
-              Quem chega pelo Instagram precisa entender rápido onde fica a
-              Petgres, como o pet será recebido e qual é o próximo passo. Por
-              isso, cada CTA leva para uma conversa contextual no WhatsApp.
-            </p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Button asChild>
-                <a href={waTrust} target="_blank" rel="noreferrer">
-                  <MessageCircle />
-                  Tirar dúvidas pelo WhatsApp
-                </a>
-              </Button>
-              <Button asChild variant="secondary">
-                <a href="#galeria">
-                  <ImageIcon />
-                  Ver estrutura de fotos
-                </a>
-              </Button>
-            </div>
-          </div>
-        </MotionBlock>
-
-        <MotionBlock delay={0.08}>
-          <div className="grid gap-3">
-            {careProofs.map((proof, index) => (
-              <div
-                key={proof}
-                className="flex items-start gap-4 rounded-[8px] border border-[var(--line)] bg-white p-4 shadow-sm"
-              >
-                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[var(--soft-warm)] text-sm font-bold text-[var(--ink)]">
-                  {index + 1}
-                </span>
-                <p className="text-sm leading-6 text-[var(--muted)]">{proof}</p>
               </div>
             ))}
           </div>
@@ -746,77 +765,85 @@ function CareProof() {
 
 function Products() {
   return (
-    <section id="produtos" className="section-y bg-[var(--ink)] px-4 text-white">
-      <div className="section-shell">
+    <section
+      id="produtos"
+      className="relative section-y bg-gradient-to-b from-[#081d3a] via-[var(--ink)] to-[#081d3a] px-4 text-white overflow-hidden"
+    >
+      <div className="absolute inset-x-0 top-0 h-64 premium-glow pointer-events-none" aria-hidden />
+      <div className="absolute inset-0 paw-pattern opacity-20" aria-hidden />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--brand-warm)]/70 to-transparent" aria-hidden />
+
+      <div className="section-shell relative">
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-          <SectionIntro
-            align="left"
-            tone="dark"
-            eyebrow="Produtos e acessórios"
-            title="Itens para cuidar melhor do seu pet entre uma visita e outra."
-            description="Consulte a disponibilidade pelo WhatsApp e receba orientação para escolher o que faz sentido para a rotina do seu cão ou gato."
-          />
+          <div className="max-w-xl">
+            <Badge className="mb-4 border-[var(--brand-warm)]/30 bg-[var(--brand-warm)]/10 text-[var(--brand-warm)]">
+              <Sparkles className="size-3.5" />
+              Curadoria Premium
+            </Badge>
+            <h2 className="text-balance text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
+              Produtos selecionados para cuidar do seu pet entre uma visita e outra.
+            </h2>
+            <p className="mt-4 text-base leading-7 text-white/76 sm:text-lg">
+              Cada item foi escolhido pensando na qualidade, na rotina e no bem-estar do seu cão ou gato. Consulte a disponibilidade pelo WhatsApp.
+            </p>
+          </div>
           <div className="flex justify-start lg:justify-end">
             <Button asChild variant="warm" size="lg">
               <a href={waProducts} target="_blank" rel="noreferrer">
-                <MessageCircle />
+                <WhatsAppIcon className="size-4 text-[#0a1f3d]" />
                 Consultar pelo WhatsApp
               </a>
             </Button>
           </div>
         </div>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {productCategories.map((category, index) => (
-            <MotionBlock key={category.title} delay={index * 0.04}>
-              <div className="h-full rounded-[8px] border border-white/14 bg-white/[0.07] p-6 backdrop-blur transition duration-300 hover:-translate-y-1 hover:bg-white/[0.11]">
-                <div className="grid size-12 place-items-center rounded-[8px] bg-white text-[var(--brand-blue)]">
-                  <category.icon className="size-6" />
+            <MotionBlock key={category.title} delay={index * 0.05}>
+              <a
+                href={waProducts}
+                target="_blank"
+                rel="noreferrer"
+                className="premium-product-card group flex h-full flex-col justify-between rounded-[10px] p-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-warm)]"
+              >
+                <div>
+                  <div className="flex items-center justify-between">
+                    <div className="grid size-14 place-items-center rounded-[10px] bg-gradient-to-br from-[var(--brand-warm)] to-[#d99518] text-[#0a1f3d] shadow-[0_8px_24px_rgba(246,191,63,0.35)]">
+                      <category.icon className="size-7" />
+                    </div>
+                    <span className="rounded-full border border-white/16 bg-white/[0.05] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white/72">
+                      {category.tag}
+                    </span>
+                  </div>
+                  <h3 className="mt-6 text-xl font-bold text-white">{category.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-white/72">
+                    {category.description}
+                  </p>
                 </div>
-                <h3 className="mt-5 text-lg font-bold text-white">{category.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-white/74">
-                  {category.description}
-                </p>
-              </div>
+                <div className="mt-6 flex items-center gap-2 text-sm font-bold text-[var(--brand-warm)]">
+                  <WhatsAppIcon className="size-4 text-[var(--brand-warm)]" />
+                  <span>Consultar disponibilidade</span>
+                  <ExternalLink className="size-3.5 transition group-hover:translate-x-1" />
+                </div>
+              </a>
             </MotionBlock>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
 
-function Differentials() {
-  return (
-    <section className="section-y bg-white px-4">
-      <div className="section-shell">
-        <SectionIntro
-          eyebrow="Diferenciais"
-          title="Confiança para você, tranquilidade para o seu melhor amigo."
-          description="O cuidado da Petgres aparece nos detalhes: na forma de receber, orientar, higienizar e entregar cada atendimento."
-        />
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-          {differentials.map((differential, index) => (
-            <MotionBlock key={differential.title} delay={index * 0.04}>
-              <div className="h-full rounded-[8px] border border-[var(--line)] bg-gradient-to-b from-white to-[#f7fbff] p-5">
-                <differential.icon className="size-6 text-[var(--brand-blue)]" />
-                <h3 className="mt-5 text-base font-bold text-[var(--ink)]">
-                  {differential.title}
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-                  {differential.description}
-                </p>
-              </div>
-            </MotionBlock>
-          ))}
-        </div>
-        <MotionBlock className="mt-10 flex justify-center">
-          <Button asChild>
-            <a href={waTrust} target="_blank" rel="noreferrer">
-              <MessageCircle />
-              Entender o atendimento
-            </a>
-          </Button>
+        <MotionBlock className="mt-14">
+          <div className="rounded-[12px] border border-white/12 bg-white/[0.04] p-6 text-center backdrop-blur sm:p-8">
+            <p className="text-base text-white/80 sm:text-lg">
+              Não encontrou o que procura? Mande mensagem que a gente busca pra você.
+            </p>
+            <div className="mt-5 flex justify-center">
+              <Button asChild variant="warm" size="lg">
+                <a href={waProducts} target="_blank" rel="noreferrer">
+                  <WhatsAppIcon className="size-4 text-[#0a1f3d]" />
+                  Pedir orientação personalizada
+                </a>
+              </Button>
+            </div>
+          </div>
         </MotionBlock>
       </div>
     </section>
@@ -838,13 +865,13 @@ function Gallery() {
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Button asChild variant="secondary">
                 <a href={siteConfig.instagramUrl} target="_blank" rel="noreferrer">
-                  <AtSign />
+                  <InstagramIcon className="size-4" />
                   Ver Instagram
                 </a>
               </Button>
               <Button asChild>
                 <a href={waGeneral} target="_blank" rel="noreferrer">
-                  <MessageCircle />
+                  <WhatsAppIcon className="size-4 text-[#25D366]" />
                   Pedir fotos pelo WhatsApp
                 </a>
               </Button>
@@ -885,80 +912,131 @@ function Gallery() {
 
 function Testimonials() {
   return (
-    <section className="section-y bg-white px-4">
-      <div className="section-shell">
+    <section id="depoimentos" className="relative section-y bg-white px-4 overflow-hidden">
+      <div className="absolute inset-0 paw-pattern opacity-40" aria-hidden />
+      <div className="section-shell relative">
         <SectionIntro
           eyebrow="Depoimentos"
-          title="Avaliações reais merecem espaço real."
-          description="Para preservar confiança, esta seção está pronta para receber comentários verificados de clientes da Petgres, sem inventar avaliações."
+          title="Histórias reais de quem confia o pet à Petgres."
+          description="Cada laço, cada banho e cada tosa virou memória boa. Veja o que os tutores contam sobre o cuidado da Petgres."
         />
-        <MotionBlock className="mx-auto mt-12 max-w-3xl">
-          <div className="rounded-[8px] border border-[var(--line)] bg-[#f7fbff] p-6 text-center shadow-sm sm:p-10">
-            <Quote className="mx-auto size-9 text-[var(--brand-blue)]" />
-            <p className="mt-5 text-balance text-xl font-bold leading-8 text-[var(--ink)]">
-              Em breve, avaliações reais de clientes atendidos pela Petgres.
-            </p>
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-[var(--muted)]">
-              Enquanto isso, fale pelo WhatsApp para tirar dúvidas, consultar
-              produtos ou agendar banho e tosa.
-            </p>
-            <Button asChild className="mt-6" variant="secondary">
-              <a href={waGeneral} target="_blank" rel="noreferrer">
-                <MessageCircle />
-                Conversar agora
-              </a>
-            </Button>
-          </div>
+
+        <div className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          {testimonials.map((testimonial, index) => (
+            <MotionBlock key={testimonial.name} delay={index * 0.08} className="flex justify-center">
+              <motion.figure
+                initial={{ rotate: testimonial.rotation }}
+                whileInView={{ rotate: testimonial.rotation }}
+                whileHover={{ rotate: 0 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="polaroid w-full max-w-[300px] rounded-[6px]"
+              >
+                <div className="polaroid-photo relative aspect-square">
+                  <Image
+                    src={testimonial.photo}
+                    alt={`Retrato de ${testimonial.pet}, pet do depoimento`}
+                    fill
+                    sizes="(min-width: 1024px) 300px, 80vw"
+                    className="object-cover"
+                  />
+                </div>
+                <figcaption className="mt-4 text-center">
+                  <p className="polaroid-caption text-2xl text-[var(--ink)] leading-none">
+                    {testimonial.pet} &amp; {testimonial.name}
+                  </p>
+                  <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                    “{testimonial.quote}”
+                  </p>
+                </figcaption>
+              </motion.figure>
+            </MotionBlock>
+          ))}
+        </div>
+
+        <MotionBlock className="mt-14 flex justify-center">
+          <Button asChild variant="secondary">
+            <a href={waGeneral} target="_blank" rel="noreferrer">
+              <WhatsAppIcon className="size-4 text-[#25D366]" />
+              Conversar com a Petgres
+            </a>
+          </Button>
         </MotionBlock>
       </div>
     </section>
   );
 }
 
-function LocalSeoQuestions() {
-  return (
-    <section className="section-y px-4">
-      <div className="section-shell">
-        <div className="grid gap-10 lg:grid-cols-[0.76fr_1.24fr] lg:items-start">
-          <SectionIntro
-            align="left"
-            eyebrow="SEO local"
-            title="Pet shop na Vila Mariana, com resposta rápida pelo WhatsApp."
-            description="As dúvidas mais importantes precisam ser respondidas sem rodeio: onde fica, como agendar e como confirmar serviços antes de sair de casa."
-          />
+function FaqQuestions() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-          <div className="grid gap-4">
-            {localQuestions.map((item) => (
-              <MotionBlock key={item.question}>
-                <div className="rounded-[8px] border border-[var(--line)] bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_45px_rgba(7,103,201,0.1)]">
-                  <div className="flex items-start gap-4">
-                    <span className="grid size-11 shrink-0 place-items-center rounded-full bg-[var(--soft-blue)] text-[var(--brand-blue)]">
-                      <item.icon className="size-5" />
+  return (
+    <section id="faq" className="relative section-y px-4 overflow-hidden">
+      <div className="absolute inset-0 checker-pattern" aria-hidden />
+      <div className="absolute inset-0 checker-overlay" aria-hidden />
+
+      <div className="section-shell relative">
+        <SectionIntro
+          eyebrow="Dúvidas frequentes"
+          title="As respostas para as perguntas que a gente mais recebe."
+          description="Se a sua dúvida não estiver aqui, fala com a gente pelo WhatsApp — a resposta sai rápida."
+        />
+
+        <div className="mx-auto mt-12 grid max-w-3xl gap-3">
+          {faqItems.map((faq, index) => {
+            const isOpen = openIndex === index;
+            return (
+              <MotionBlock key={faq.question} delay={index * 0.03}>
+                <div className="overflow-hidden rounded-[10px] border border-[var(--line)] bg-white shadow-[0_18px_45px_rgba(7,103,201,0.08)]">
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    onClick={() => setOpenIndex(isOpen ? null : index)}
+                    className="faq-trigger flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition hover:bg-[var(--soft-blue)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] sm:px-6 sm:py-5"
+                  >
+                    <span className="flex items-center gap-3">
+                      <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[var(--soft-blue)] text-[var(--brand-blue)]">
+                        <PawPrint className="size-4" />
+                      </span>
+                      <span className="text-base font-bold text-[var(--ink)] sm:text-lg">
+                        {faq.question}
+                      </span>
                     </span>
-                    <div>
-                      <h3 className="text-lg font-bold text-[var(--ink)]">
-                        {item.question}
-                      </h3>
-                      <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-                        {item.answer}
-                      </p>
-                    </div>
-                  </div>
-                  <Button asChild className="mt-5" variant="secondary">
-                    <a
-                      href={item.href}
-                      target={item.href.startsWith("http") ? "_blank" : undefined}
-                      rel={item.href.startsWith("http") ? "noreferrer" : undefined}
-                    >
-                      <CircleHelp />
-                      {item.label}
-                    </a>
-                  </Button>
+                    <ChevronDown
+                      className={cn(
+                        "faq-chevron size-5 shrink-0 text-[var(--brand-blue)]",
+                        isOpen && "rotate-180",
+                      )}
+                    />
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {isOpen ? (
+                      <motion.div
+                        key="content"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.28, ease: "easeOut" }}
+                      >
+                        <div className="border-t border-[var(--line)] px-5 py-4 text-sm leading-7 text-[var(--muted)] sm:px-6 sm:py-5 sm:text-base">
+                          {faq.answer}
+                        </div>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
                 </div>
               </MotionBlock>
-            ))}
-          </div>
+            );
+          })}
         </div>
+
+        <MotionBlock className="mt-12 flex justify-center">
+          <Button asChild>
+            <a href={waGeneral} target="_blank" rel="noreferrer">
+              <WhatsAppIcon className="size-4 text-white" />
+              Tirar dúvida pelo WhatsApp
+            </a>
+          </Button>
+        </MotionBlock>
       </div>
     </section>
   );
@@ -976,7 +1054,7 @@ function Location() {
                 Localização
               </Badge>
               <h2 className="mt-5 text-balance text-3xl font-bold leading-tight text-[var(--ink)] sm:text-4xl">
-                Petgres na Vila Mariana, perto da sua rotina.
+                Petgres no bairro Saúde, perto da sua rotina.
               </h2>
               <p className="mt-4 text-base leading-7 text-[var(--muted)]">
                 {siteConfig.address}
@@ -991,7 +1069,7 @@ function Location() {
               </Button>
               <Button asChild variant="secondary">
                 <a href={waGeneral} target="_blank" rel="noreferrer">
-                  <MessageCircle />
+                  <WhatsAppIcon className="size-4 text-[#25D366]" />
                   WhatsApp
                 </a>
               </Button>
@@ -1009,7 +1087,7 @@ function Location() {
             </div>
             <iframe
               className="relative z-10"
-              title="Mapa com localização da Petgres na Vila Mariana"
+              title="Mapa com localização da Petgres no bairro Saúde"
               src={siteConfig.mapsEmbed}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -1031,7 +1109,8 @@ function Contact() {
       label: "WhatsApp",
       value: siteConfig.whatsappDisplay,
       href: waGeneral,
-      icon: MessageCircle,
+      icon: WhatsAppIcon,
+      iconClass: "text-[#25D366]",
       external: true,
     },
     {
@@ -1039,13 +1118,15 @@ function Contact() {
       value: siteConfig.email,
       href: `mailto:${siteConfig.email}`,
       icon: Mail,
+      iconClass: "text-[var(--brand-blue)]",
       external: false,
     },
     {
       label: "Instagram",
       value: `@${siteConfig.instagram}`,
       href: siteConfig.instagramUrl,
-      icon: AtSign,
+      icon: InstagramIcon,
+      iconClass: "text-[#E1306C]",
       external: true,
     },
   ];
@@ -1061,28 +1142,31 @@ function Contact() {
             description="Agende banho e tosa, consulte produtos e tire dúvidas diretamente pelos canais oficiais."
           />
           <div className="grid gap-4 sm:grid-cols-3">
-            {contacts.map((contact) => (
-              <a
-                key={contact.label}
-                href={contact.href}
-                target={contact.external ? "_blank" : undefined}
-                rel={contact.external ? "noreferrer" : undefined}
-                className="group rounded-[8px] border border-[var(--line)] bg-[#f7fbff] p-5 transition duration-300 hover:-translate-y-1 hover:border-[var(--brand-blue)] hover:bg-white hover:shadow-[0_20px_50px_rgba(7,103,201,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <contact.icon className="size-6 text-[var(--brand-blue)]" />
-                  {contact.external ? (
-                    <ExternalLink className="size-4 text-[var(--muted)]" />
-                  ) : null}
-                </div>
-                <p className="mt-5 text-sm font-semibold text-[var(--muted)]">
-                  {contact.label}
-                </p>
-                <p className="mt-1 break-words text-base font-bold text-[var(--ink)]">
-                  {contact.value}
-                </p>
-              </a>
-            ))}
+            {contacts.map((contact) => {
+              const Icon = contact.icon;
+              return (
+                <a
+                  key={contact.label}
+                  href={contact.href}
+                  target={contact.external ? "_blank" : undefined}
+                  rel={contact.external ? "noreferrer" : undefined}
+                  className="group rounded-[8px] border border-[var(--line)] bg-[#f7fbff] p-5 transition duration-300 hover:-translate-y-1 hover:border-[var(--brand-blue)] hover:bg-white hover:shadow-[0_20px_50px_rgba(7,103,201,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <Icon className={cn("size-6", contact.iconClass)} />
+                    {contact.external ? (
+                      <ExternalLink className="size-4 text-[var(--muted)]" />
+                    ) : null}
+                  </div>
+                  <p className="mt-5 text-sm font-semibold text-[var(--muted)]">
+                    {contact.label}
+                  </p>
+                  <p className="mt-1 break-words text-base font-bold text-[var(--ink)]">
+                    {contact.value}
+                  </p>
+                </a>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -1124,7 +1208,7 @@ function FinalCta() {
               className="border border-white/32 bg-white text-[var(--brand-blue)] hover:bg-white/92"
             >
               <a href={waGeneral} target="_blank" rel="noreferrer">
-                <MessageCircle />
+                <WhatsAppIcon className="size-4 text-[#25D366]" />
                 Conversar no WhatsApp
               </a>
             </Button>
@@ -1173,65 +1257,73 @@ function FloatingWhatsApp() {
 
 function Footer() {
   return (
-    <footer className="border-t border-[var(--line)] bg-white px-4 py-10">
+    <footer className="bg-[var(--footer-blue)] px-4 py-12 text-white">
       <div className="section-shell grid gap-8 md:grid-cols-[1fr_auto_auto]">
         <div>
           <div className="flex items-center gap-3">
-            <Image
-              src="/assets/petgres-logo-clean.png"
-              alt="Logo Petgres"
-              width={54}
-              height={54}
-              className="rounded-full"
-            />
+            <span className="grid size-14 place-items-center overflow-hidden rounded-full bg-white">
+              <Image
+                src="/assets/petgres-logo-clean.png"
+                alt="Logo Petgres"
+                width={54}
+                height={54}
+                className="rounded-full"
+              />
+            </span>
             <div>
-              <p className="text-lg font-bold text-[var(--ink)]">Petgres</p>
-              <p className="text-sm text-[var(--muted)]">Petshop na Vila Mariana</p>
+              <p className="text-lg font-bold text-white">Petgres</p>
+              <p className="text-sm text-white/72">Petshop no bairro Saúde</p>
             </div>
           </div>
-          <p className="mt-5 max-w-md text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-5 max-w-md text-sm leading-6 text-white/72">
             Banho e tosa, produtos, acessórios e atendimento com carinho para
             cães e gatos em São Paulo/SP.
           </p>
         </div>
         <nav aria-label="Links rápidos" className="grid gap-2 text-sm">
-          {navItems.map((item) => (
+          {navItems.map((nav) => (
             <a
-              key={item.href}
-              href={item.href}
-              className="font-semibold text-[var(--muted)] transition hover:text-[var(--brand-blue)]"
+              key={nav.href}
+              href={nav.href}
+              className="font-semibold text-white/76 transition hover:text-white"
             >
-              {item.label}
+              {nav.label}
             </a>
           ))}
         </nav>
-        <div className="grid gap-2 text-sm text-[var(--muted)]">
+        <div className="grid gap-2 text-sm text-white/76">
           <a
-            className="font-semibold hover:text-[var(--brand-blue)]"
+            className="flex items-center gap-2 font-semibold text-white/86 hover:text-white"
             href={waGeneral}
             target="_blank"
             rel="noreferrer"
           >
+            <WhatsAppIcon className="size-4 text-[#25D366]" />
             {siteConfig.whatsappDisplay}
           </a>
           <a
-            className="font-semibold hover:text-[var(--brand-blue)]"
+            className="flex items-center gap-2 font-semibold text-white/86 hover:text-white"
             href={`mailto:${siteConfig.email}`}
           >
+            <Mail className="size-4" />
             {siteConfig.email}
           </a>
           <a
-            className="font-semibold hover:text-[var(--brand-blue)]"
+            className="flex items-center gap-2 font-semibold text-white/86 hover:text-white"
             href={siteConfig.instagramUrl}
             target="_blank"
             rel="noreferrer"
           >
+            <InstagramIcon className="size-4" />
             @{siteConfig.instagram}
           </a>
-          <span>{siteConfig.address}</span>
+          <span className="flex items-start gap-2 text-white/72">
+            <MapPin className="mt-0.5 size-4 shrink-0" />
+            {siteConfig.address}
+          </span>
         </div>
       </div>
-      <div className="section-shell mt-8 flex flex-col gap-2 border-t border-[var(--line)] pt-6 text-xs text-[var(--muted)] sm:flex-row sm:items-center sm:justify-between">
+      <div className="section-shell mt-8 flex flex-col gap-2 border-t border-white/12 pt-6 text-xs text-white/64 sm:flex-row sm:items-center sm:justify-between">
         <span>© {new Date().getFullYear()} Petgres. Todos os direitos reservados.</span>
         <span>Cuidado local, atendimento próximo.</span>
       </div>
@@ -1247,12 +1339,10 @@ export function PetgresLanding() {
       <TrustStrip />
       <Services />
       <Grooming />
-      <CareProof />
       <Products />
-      <Differentials />
       <Gallery />
       <Testimonials />
-      <LocalSeoQuestions />
+      <FaqQuestions />
       <Location />
       <Contact />
       <FinalCta />
@@ -1261,4 +1351,3 @@ export function PetgresLanding() {
     </main>
   );
 }
-

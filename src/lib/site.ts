@@ -1,10 +1,10 @@
 export const siteConfig = {
   name: "Petgres",
   description:
-    "Pet shop na Vila Mariana com banho e tosa, produtos, acessórios e cuidado dedicado para pets em São Paulo.",
-  address: "Rua Juá, 160 - Vila Mariana, São Paulo/SP",
+    "Pet shop na Saúde com banho e tosa, produtos, acessórios e cuidado dedicado para pets em São Paulo.",
+  address: "Rua Juá, 160 - Saúde, São Paulo/SP",
   streetAddress: "Rua Juá, 160",
-  neighborhood: "Vila Mariana",
+  neighborhood: "Saúde",
   city: "São Paulo",
   state: "SP",
   whatsapp: "5511941189254",
@@ -13,9 +13,9 @@ export const siteConfig = {
   instagram: "petgres_",
   instagramUrl: "https://www.instagram.com/petgres_/",
   mapsUrl:
-    "https://www.google.com/maps/search/?api=1&query=Rua%20Ju%C3%A1%2C%20160%20Vila%20Mariana%20S%C3%A3o%20Paulo%20SP",
+    "https://www.google.com/maps/search/?api=1&query=Rua%20Ju%C3%A1%2C%20160%20Sa%C3%BAde%20S%C3%A3o%20Paulo%20SP",
   mapsEmbed:
-    "https://www.google.com/maps?q=Rua%20Ju%C3%A1%2C%20160%20Vila%20Mariana%20S%C3%A3o%20Paulo%20SP&output=embed",
+    "https://www.google.com/maps?q=Rua%20Ju%C3%A1%2C%20160%20Sa%C3%BAde%20S%C3%A3o%20Paulo%20SP&output=embed",
 };
 
 export const conversionConfig = {
@@ -31,7 +31,7 @@ const ctaMessages = {
   trust:
     "Olá, Petgres! Quero entender como funciona o atendimento antes de agendar.",
   local:
-    "Olá, Petgres! Estou na Vila Mariana e gostaria de atendimento na Rua Juá, 160.",
+    "Olá, Petgres! Estou no bairro Saúde e gostaria de atendimento na Rua Juá, 160.",
   veterinaryAvailability:
     "Olá, Petgres! Gostaria de confirmar disponibilidade ou orientação sobre atendimento veterinário.",
 } as const;

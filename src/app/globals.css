@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap");
 
 :root {
   --background: #f7fbff;
@@ -17,6 +18,8 @@
   --line: #d7e6f3;
   --ring: #198ed9;
   --radius: 8px;
+  --footer-blue: #0a1f3d;
+  --footer-blue-strong: #061530;
 }
 
 @theme inline {
@@ -104,6 +107,129 @@ a {
 
 section[id] {
   scroll-margin-top: 6.5rem;
+}
+
+.paw-pattern {
+  background-image: url("/assets/patterns/paws.svg");
+  background-size: 220px 220px;
+}
+
+.checker-pattern {
+  --checker-size: 56px;
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #0d0d0d 25%, transparent 25%),
+    linear-gradient(-45deg, #0d0d0d 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #0d0d0d 75%),
+    linear-gradient(-45deg, transparent 75%, #0d0d0d 75%);
+  background-size: var(--checker-size) var(--checker-size);
+  background-position:
+    0 0,
+    0 calc(var(--checker-size) / 2),
+    calc(var(--checker-size) / 2) calc(var(--checker-size) / -2),
+    calc(var(--checker-size) / -2) 0;
+}
+
+.checker-overlay {
+  background:
+    radial-gradient(ellipse at center, rgba(247, 251, 255, 0.94) 0%, rgba(247, 251, 255, 0.7) 55%, rgba(247, 251, 255, 0.85) 100%);
+}
+
+.polaroid {
+  background: #ffffff;
+  padding: 14px 14px 56px 14px;
+  box-shadow:
+    0 1px 0 rgba(16, 48, 82, 0.04),
+    0 18px 50px rgba(16, 48, 82, 0.18),
+    0 38px 70px rgba(16, 48, 82, 0.1);
+  transition: transform 0.45s ease, box-shadow 0.45s ease;
+}
+
+.polaroid:hover {
+  transform: translateY(-6px) rotate(0deg) scale(1.015);
+  box-shadow:
+    0 1px 0 rgba(16, 48, 82, 0.04),
+    0 26px 70px rgba(16, 48, 82, 0.24),
+    0 50px 90px rgba(16, 48, 82, 0.12);
+}
+
+.polaroid-photo {
+  position: relative;
+  overflow: hidden;
+  background: #eaf2fb;
+}
+
+.polaroid-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 30%, rgba(0, 0, 0, 0.05) 100%);
+  pointer-events: none;
+}
+
+.polaroid-caption {
+  font-family: "Caveat", "Bradley Hand", "Comic Sans MS", cursive;
+}
+
+.section-photo-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.section-photo-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(247, 251, 255, 0.88) 0%, rgba(247, 251, 255, 0.96) 100%);
+}
+
+.premium-product-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.premium-product-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, rgba(246, 191, 63, 0.35), transparent 40%, rgba(34, 180, 223, 0.3) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.premium-product-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(246, 191, 63, 0.55);
+  box-shadow: 0 28px 70px rgba(7, 30, 60, 0.45);
+}
+
+.premium-product-card:hover::before {
+  opacity: 1;
+}
+
+.premium-product-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.premium-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(246, 191, 63, 0.22), transparent 60%);
+}
+
+.faq-trigger[aria-expanded="true"] .faq-chevron {
+  transform: rotate(180deg);
+}
+
+.faq-chevron {
+  transition: transform 0.3s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
