@@ -279,14 +279,14 @@ const container = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.08,
+      staggerChildren: 0.06,
     },
   },
 };
 
 const item = {
-  hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { y: 14 },
+  visible: { y: 0 },
 };
 
 const waSchedule = ctaHref("schedule");
@@ -307,8 +307,8 @@ function MotionBlock({
 
   return (
     <motion.div
-      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-      animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      initial={reduceMotion ? false : { y: 14 }}
+      animate={reduceMotion ? undefined : { y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 0.61, 0.36, 1], delay }}
       className={className}
     >
@@ -605,9 +605,9 @@ function Hero() {
         </motion.div>
 
         <motion.div
-          initial={reduceMotion ? false : { opacity: 0, scale: 0.96, y: 24 }}
-          animate={reduceMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
+          initial={reduceMotion ? false : { scale: 0.97, y: 16 }}
+          animate={reduceMotion ? undefined : { scale: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
           className="relative mx-auto w-full max-w-xl"
         >
           <div className="premium-frame relative">
@@ -1387,9 +1387,9 @@ function FloatingWhatsApp() {
           href={waSchedule}
           target="_blank"
           rel="noreferrer"
-          initial={{ opacity: 0, y: 18, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 12, scale: 0.98 }}
+          initial={{ y: 18, scale: 0.98 }}
+          animate={{ y: 0, scale: 1 }}
+          exit={{ y: 12, scale: 0.98 }}
           transition={{ duration: 0.28, ease: [0.22, 0.61, 0.36, 1] }}
           className="fixed inset-x-4 bottom-[calc(0.875rem+env(safe-area-inset-bottom))] z-50 flex h-12 items-center justify-center gap-2 rounded-full bg-[var(--brand-blue)] px-5 text-sm font-bold text-white shadow-[0_18px_45px_rgba(0,83,178,0.32)] ring-1 ring-white/70 md:hidden"
           aria-label="Agendar atendimento pelo WhatsApp"
