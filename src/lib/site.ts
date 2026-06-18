@@ -12,6 +12,12 @@ export const siteConfig = {
   email: "petgres2@gmail.com",
   instagram: "petgres_",
   instagramUrl: "https://www.instagram.com/petgres_/",
+  hours: {
+    weekday: "Seg a Sex · 9h às 19h",
+    saturday: "Sábado · 9h às 17h",
+    sunday: "Domingo · Fechado",
+  },
+  responseTime: "Resposta em até 15 min no WhatsApp",
   mapsUrl:
     "https://www.google.com/maps/search/?api=1&query=Rua%20Ju%C3%A1%2C%20160%20Sa%C3%BAde%20S%C3%A3o%20Paulo%20SP",
   mapsEmbed:

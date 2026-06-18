@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="600" height="450">
+  <defs>
+    <linearGradient id="bgTeam" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff7de"/>
+      <stop offset="100%" stop-color="#ffe6a1"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="450" fill="url(#bgTeam)"/>
+  <rect x="0" y="320" width="600" height="130" fill="#f0d178"/>
+  <g transform="translate(140 220)">
+    <ellipse cx="0" cy="180" rx="55" ry="10" fill="#cba045" opacity="0.5"/>
+    <rect x="-50" y="40" width="100" height="120" rx="20" fill="#0767c9"/>
+    <rect x="-50" y="40" width="100" height="50" rx="20" fill="#004f9f"/>
+    <text x="0" y="78" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#ffffff">PETGRES</text>
+    <ellipse cx="0" cy="0" rx="38" ry="42" fill="#f5d9b7"/>
+    <path d="M-38 -8 Q-40 -45 0 -50 Q40 -45 38 -8 Q38 -28 0 -32 Q-38 -28 -38 -8 Z" fill="#3a2418"/>
+    <ellipse cx="-12" cy="0" rx="3" ry="5" fill="#1a1a1a"/>
+    <ellipse cx="12" cy="0" rx="3" ry="5" fill="#1a1a1a"/>
+    <path d="M-10 18 Q0 28 10 18" stroke="#3a2418" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="-22" cy="6" r="4" fill="#f5a384" opacity="0.5"/>
+    <circle cx="22" cy="6" r="4" fill="#f5a384" opacity="0.5"/>
+  </g>
+  <g transform="translate(300 240)">
+    <ellipse cx="0" cy="160" rx="60" ry="10" fill="#cba045" opacity="0.5"/>
+    <rect x="-55" y="20" width="110" height="130" rx="22" fill="#f6bf3f"/>
+    <rect x="-55" y="20" width="110" height="55" rx="22" fill="#d99518"/>
+    <text x="0" y="59" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#0a1f3d">PETGRES</text>
+    <ellipse cx="0" cy="-20" rx="42" ry="46" fill="#e0a884"/>
+    <path d="M-42 -28 Q-44 -65 0 -70 Q44 -65 42 -28 Q42 -50 0 -55 Q-42 -50 -42 -28 Z" fill="#1a0f08"/>
+    <path d="M-42 -25 Q-44 -10 -38 0 L-30 -8 Q-38 -15 -42 -25 Z" fill="#1a0f08"/>
+    <path d="M42 -25 Q44 -10 38 0 L30 -8 Q38 -15 42 -25 Z" fill="#1a0f08"/>
+    <ellipse cx="-14" cy="-20" rx="3.5" ry="5" fill="#1a1a1a"/>
+    <ellipse cx="14" cy="-20" rx="3.5" ry="5" fill="#1a1a1a"/>
+    <path d="M-12 -2 Q0 8 12 -2" stroke="#1a0f08" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="-24" cy="-14" r="4" fill="#f5a384" opacity="0.5"/>
+    <circle cx="24" cy="-14" r="4" fill="#f5a384" opacity="0.5"/>
+  </g>
+  <g transform="translate(460 220)">
+    <ellipse cx="0" cy="180" rx="55" ry="10" fill="#cba045" opacity="0.5"/>
+    <rect x="-50" y="40" width="100" height="120" rx="20" fill="#0767c9"/>
+    <rect x="-50" y="40" width="100" height="50" rx="20" fill="#004f9f"/>
+    <text x="0" y="78" font-family="Inter, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#ffffff">PETGRES</text>
+    <ellipse cx="0" cy="0" rx="38" ry="42" fill="#c89270"/>
+    <path d="M-38 -8 Q-40 -42 0 -48 Q40 -42 38 -8 Q38 -25 0 -28 Q-38 -25 -38 -8 Z" fill="#2a1a10"/>
+    <circle cx="0" cy="-30" r="20" fill="#2a1a10"/>
+    <ellipse cx="-12" cy="0" rx="3" ry="5" fill="#1a1a1a"/>
+    <ellipse cx="12" cy="0" rx="3" ry="5" fill="#1a1a1a"/>
+    <path d="M-10 18 Q0 28 10 18" stroke="#2a1a10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="-22" cy="6" r="4" fill="#f5a384" opacity="0.5"/>
+    <circle cx="22" cy="6" r="4" fill="#f5a384" opacity="0.5"/>
+  </g>
+  <g opacity="0.4" transform="translate(50 50)">
+    <ellipse cx="0" cy="0" rx="9" ry="12" fill="#f6bf3f"/>
+    <ellipse cx="-13" cy="-10" rx="4" ry="6" fill="#f6bf3f"/>
+    <ellipse cx="-3" cy="-18" rx="4" ry="6" fill="#f6bf3f"/>
+    <ellipse cx="9" cy="-17" rx="4" ry="6" fill="#f6bf3f"/>
+    <ellipse cx="17" cy="-8" rx="4" ry="6" fill="#f6bf3f"/>
+  </g>
+  <g opacity="0.4" transform="translate(530 80) rotate(20)">
+    <ellipse cx="0" cy="0" rx="9" ry="12" fill="#0767c9"/>
+    <ellipse cx="-13" cy="-10" rx="4" ry="6" fill="#0767c9"/>
+    <ellipse cx="-3" cy="-18" rx="4" ry="6" fill="#0767c9"/>
+    <ellipse cx="9" cy="-17" rx="4" ry="6" fill="#0767c9"/>
+    <ellipse cx="17" cy="-8" rx="4" ry="6" fill="#0767c9"/>
+  </g>
+</svg>

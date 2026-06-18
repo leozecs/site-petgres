@@ -2,24 +2,26 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import {
   BadgeCheck,
   Bone,
   CalendarCheck,
-  Camera,
-  Cat,
+  CheckCircle2,
   ChevronDown,
-  ClipboardCheck,
-  Dog,
+  Clock,
   Droplets,
   ExternalLink,
   Gift,
   Mail,
-  MapPinned,
   MapPin,
   Menu,
-  MessageCircleHeart,
   Navigation,
   PackageCheck,
   PawPrint,
@@ -28,7 +30,7 @@ import {
   Send,
   ShoppingBag,
   Sparkles,
-  Store,
+  Star,
   Users,
   Wind,
   X,
@@ -37,7 +39,6 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ctaHref, siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -91,68 +92,78 @@ type IconItem = {
   icon: LucideIcon;
 };
 
-const services: IconItem[] = [
+const services: Array<IconItem & { highlight: string }> = [
   {
     title: "Banho e Tosa",
     description:
       "Higiene, conforto e finalização com atenção ao temperamento de cada pet.",
+    highlight: "Sob agendamento",
     icon: Scissors,
   },
   {
     title: "Produtos Pet",
     description:
       "Itens selecionados para rotina, cuidado e bem-estar no dia a dia.",
+    highlight: "Curadoria local",
     icon: ShoppingBag,
   },
   {
     title: "Acessórios",
     description:
       "Opções práticas para passeio, conforto, brincadeira e organização.",
+    highlight: "Pra cada porte",
     icon: Gift,
   },
   {
     title: "Cuidados e Higiene",
     description:
       "Orientação próxima para manter seu pet limpo, cheiroso e protegido.",
+    highlight: "Sem pressa",
     icon: Droplets,
   },
 ];
 
-const groomingSteps: Array<IconItem> = [
+const groomingSteps: Array<IconItem & { duration: string }> = [
   {
     title: "Recepção",
     description:
       "Boas-vindas tranquilas e cadastro rápido, respeitando o tempo de adaptação do pet.",
+    duration: "5–10 min",
     icon: Users,
   },
   {
     title: "Avaliação",
     description:
       "Análise da pelagem, da pele e de cuidados específicos antes de iniciar o banho.",
+    duration: "5 min",
     icon: BadgeCheck,
   },
   {
     title: "Banho",
     description:
       "Shampoo escolhido para o tipo de pelo, com água em temperatura agradável.",
+    duration: "15–25 min",
     icon: Droplets,
   },
   {
     title: "Secagem",
     description:
       "Secadores em potência segura para conforto e proteção da pele do pet.",
+    duration: "20–30 min",
     icon: Wind,
   },
   {
     title: "Tosa",
     description:
       "Tosa higiênica ou estética, sempre alinhada com o tutor antes de começar.",
+    duration: "15–40 min",
     icon: Scissors,
   },
   {
     title: "Finalização",
     description:
       "Perfume suave, laço ou gravatinha e devolução do pet pronto para casa.",
+    duration: "5 min",
     icon: Sparkles,
   },
 ];
@@ -184,28 +195,26 @@ const productCategories: Array<IconItem & { tag: string }> = [
   },
 ];
 
-const galleryPlaceholders = [
-  { title: "Fachada na Rua Juá", icon: Store, color: "bg-[#eaf6ff]" },
-  { title: "Equipe no atendimento", icon: Users, color: "bg-[#fff7de]" },
-  { title: "Banho e tosa em processo", icon: Scissors, color: "bg-[#eefaf4]" },
-  { title: "Pets atendidos", icon: Dog, color: "bg-[#fff1ea]" },
-];
-
-const trustSignals = [
+const galleryItems = [
   {
-    title: "Rua Juá, 160",
-    description: "Atendimento local no bairro Saúde, São Paulo/SP.",
-    icon: MapPinned,
+    title: "Fachada na Rua Juá",
+    caption: "Entrada da loja",
+    src: "/assets/gallery/storefront.svg",
   },
   {
-    title: "Agendamento direto",
-    description: "Conversa objetiva pelo WhatsApp, sem formulário frio.",
-    icon: MessageCircleHeart,
+    title: "Equipe Petgres",
+    caption: "Atendimento próximo",
+    src: "/assets/gallery/team.svg",
   },
   {
-    title: "Rotina com cuidado",
-    description: "Processo de banho e tosa pensado para reduzir estresse.",
-    icon: ClipboardCheck,
+    title: "Banho e tosa",
+    caption: "Processo cuidadoso",
+    src: "/assets/gallery/grooming.svg",
+  },
+  {
+    title: "Pets atendidos",
+    caption: "Sempre felizes",
+    src: "/assets/gallery/happy-pets.svg",
   },
 ];
 
@@ -217,6 +226,7 @@ const testimonials = [
     quote:
       "O Theo voltou cheirosinho e super calminho. Atendimento atencioso do início ao fim.",
     rotation: -2.6,
+    rating: 5,
   },
   {
     name: "Renata M.",
@@ -225,6 +235,7 @@ const testimonials = [
     quote:
       "A Mia é uma gatinha tímida e foi recebida com toda a paciência. Saiu macia e perfumada.",
     rotation: 1.6,
+    rating: 5,
   },
   {
     name: "Bruno A.",
@@ -233,6 +244,7 @@ const testimonials = [
     quote:
       "Banho e tosa impecáveis. A Luna ama vir aqui — isso já diz tudo sobre o cuidado.",
     rotation: -1.2,
+    rating: 5,
   },
 ];
 
@@ -304,7 +316,7 @@ function MotionBlock({
       initial={reduceMotion ? false : { opacity: 0, y: 22 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.55, ease: "easeOut", delay }}
+      transition={{ duration: 0.55, ease: [0.22, 0.61, 0.36, 1], delay }}
       className={className}
     >
       {children}
@@ -332,17 +344,24 @@ function SectionIntro({
         align === "center" ? "text-center" : "text-left",
       )}
     >
-      <Badge
+      <span
         className={cn(
-          "mb-4",
-          tone === "dark" && "border-white/20 bg-white/10 text-white",
+          "eyebrow inline-flex items-center gap-2",
+          tone === "dark" ? "text-[var(--brand-warm)]" : "text-[var(--brand-blue)]",
         )}
       >
+        <span
+          className={cn(
+            "h-px w-8",
+            tone === "dark" ? "bg-[var(--brand-warm)]/60" : "bg-[var(--brand-blue)]/60",
+          )}
+          aria-hidden
+        />
         {eyebrow}
-      </Badge>
+      </span>
       <h2
         className={cn(
-          "text-balance text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl",
+          "display-2 text-balance mt-5",
           tone === "dark" ? "text-white" : "text-[var(--ink)]",
         )}
       >
@@ -350,7 +369,7 @@ function SectionIntro({
       </h2>
       <p
         className={cn(
-          "mt-4 text-base leading-7 sm:text-lg",
+          "mt-5 text-pretty text-base leading-[1.7] sm:text-lg",
           tone === "dark" ? "text-white/76" : "text-[var(--muted)]",
         )}
       >
@@ -383,7 +402,7 @@ function Header() {
       <div
         className={cn(
           "relative z-10 mx-auto flex w-full max-w-[1180px] items-center justify-between rounded-full px-4 py-3 transition-all duration-300",
-          scrolled ? "glass" : "border border-transparent bg-white/52 backdrop-blur-sm",
+          scrolled ? "glass" : "border border-transparent bg-white/55 backdrop-blur-sm",
         )}
       >
         <a
@@ -403,7 +422,7 @@ function Header() {
           <span className="hidden min-w-0 flex-col leading-none sm:flex">
             <strong className="text-base font-bold text-[var(--ink)]">Petgres</strong>
             <span className="mt-1 text-xs font-medium text-[var(--muted)]">
-              Bairro Saúde
+              Bairro Saúde · SP
             </span>
           </span>
         </a>
@@ -413,7 +432,7 @@ function Header() {
             <a
               key={nav.href}
               href={nav.href}
-              className="rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted)] transition hover:bg-[var(--soft-blue)] hover:text-[var(--brand-blue)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+              className="rounded-full px-3.5 py-2 text-sm font-semibold text-[var(--muted)] transition hover:bg-[var(--soft-blue)] hover:text-[var(--brand-blue)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
             >
               {nav.label}
             </a>
@@ -424,7 +443,7 @@ function Header() {
           <Button asChild size="sm">
             <a href={waSchedule} target="_blank" rel="noreferrer">
               <CalendarCheck />
-              Agendar Atendimento
+              Agendar
             </a>
           </Button>
         </div>
@@ -457,7 +476,7 @@ function Header() {
             />
             <motion.div
               id="mobile-menu"
-              className="glass relative z-10 mx-auto mt-3 w-[calc(100%-0.5rem)] max-w-[1180px] rounded-[8px] p-3 lg:hidden"
+              className="glass relative z-10 mx-auto mt-3 w-[calc(100%-0.5rem)] max-w-[1180px] rounded-[12px] p-3 lg:hidden"
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
@@ -491,51 +510,69 @@ function Header() {
 
 function Hero() {
   const reduceMotion = useReducedMotion();
+  const { scrollY } = useScroll();
+  const photoY = useTransform(scrollY, [0, 500], [0, 60]);
+  const decoY = useTransform(scrollY, [0, 500], [0, -30]);
+
   const floatingItems = [
-    { label: "Banho e Tosa", className: "left-4 top-5" },
-    { label: "Produtos Pet", className: "right-4 top-20" },
-    { label: "Acessórios", className: "bottom-20 left-6" },
-    { label: "Cuidado com carinho", className: "bottom-5 right-6" },
+    { label: "Banho e Tosa", className: "-left-2 top-6", color: "text-[var(--brand-blue)]" },
+    { label: "Produtos Pet", className: "-right-2 top-24", color: "text-[var(--brand-warm-strong)]" },
+    { label: "Acessórios", className: "bottom-24 -left-4", color: "text-[var(--brand-coral)]" },
+    { label: "Cuidado com carinho", className: "bottom-4 -right-2", color: "text-[var(--brand-green)]" },
   ];
 
   return (
     <section
       id="inicio"
-      className="relative overflow-hidden px-4 pb-14 pt-28 sm:pt-32 lg:pb-20 lg:pt-36"
+      className="relative overflow-hidden px-4 pb-16 pt-28 sm:pt-32 lg:pb-24 lg:pt-40"
     >
-      <div className="absolute inset-0 -z-10 soft-grid opacity-60" />
-      <div className="absolute inset-0 -z-10 paw-pattern opacity-50" />
-      <div className="section-shell grid items-center gap-10 lg:grid-cols-[1fr_0.9fr]">
+      <div className="absolute inset-0 -z-10 soft-grid opacity-60" aria-hidden />
+      <div className="absolute inset-0 -z-10 paw-pattern opacity-50" aria-hidden />
+      <motion.div
+        className="absolute -right-32 -top-32 -z-10 h-[420px] w-[420px] rounded-full bg-gradient-to-br from-[#f6bf3f]/20 via-[#22b4df]/14 to-transparent blur-3xl"
+        style={reduceMotion ? undefined : { y: decoY }}
+        aria-hidden
+      />
+      <motion.div
+        className="absolute -left-32 bottom-0 -z-10 h-[360px] w-[360px] rounded-full bg-gradient-to-tr from-[#0767c9]/14 to-transparent blur-3xl"
+        aria-hidden
+      />
+
+      <div className="section-shell grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
         <motion.div
           variants={container}
           initial={reduceMotion ? false : "hidden"}
           animate="visible"
           className="max-w-3xl"
         >
-          <motion.div variants={item}>
+          <motion.div variants={item} className="flex flex-wrap items-center gap-2">
             <Badge>
               <PawPrint className="size-3.5" />
               Petshop no bairro Saúde
             </Badge>
+            <span className="inline-flex items-center gap-2 rounded-full border border-[var(--brand-green)]/30 bg-[var(--brand-green)]/10 px-3 py-1 text-xs font-bold text-[var(--brand-green)]">
+              <span className="live-dot" aria-hidden />
+              Atendendo agora
+            </span>
           </motion.div>
           <motion.h1
             variants={item}
-            className="text-balance mt-5 text-4xl font-bold leading-[1.04] text-[var(--ink)] sm:text-5xl lg:text-6xl"
+            className="display-1 text-balance mt-6 text-[var(--ink)]"
           >
-            Cuidado, carinho e bem-estar para o seu pet no bairro Saúde.
+            Cuidado, carinho e bem-estar para o seu pet.
           </motion.h1>
           <motion.p
             variants={item}
-            className="mt-5 max-w-2xl text-lg leading-8 text-[var(--muted)] sm:text-xl"
+            className="mt-6 max-w-2xl text-pretty text-lg leading-[1.7] text-[var(--muted)] sm:text-xl"
           >
-            Na Petgres, seu pet encontra banho e tosa, produtos, acessórios e
-            atendimento dedicado para ficar limpo, saudável e feliz.
+            Na Petgres você encontra banho e tosa, produtos e acessórios com
+            atendimento dedicado — no coração do bairro Saúde, em São Paulo.
           </motion.p>
           <motion.div
             variants={item}
-            className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
+            className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
           >
-            <Button asChild size="lg">
+            <Button asChild size="lg" className="cta-pulse">
               <a href={waSchedule} target="_blank" rel="noreferrer">
                 <CalendarCheck />
                 Agendar Atendimento
@@ -548,9 +585,15 @@ function Hero() {
               </a>
             </Button>
           </motion.div>
+          <motion.p
+            variants={item}
+            className="mt-5 text-sm font-medium text-[var(--muted)]"
+          >
+            {siteConfig.responseTime} · {siteConfig.hours.weekday}
+          </motion.p>
           <motion.div
             variants={item}
-            className="mt-8 hidden max-w-xl grid-cols-3 gap-3 sm:grid"
+            className="mt-9 grid max-w-xl grid-cols-3 gap-3"
             aria-label="Destaques da Petgres"
           >
             {[
@@ -562,7 +605,7 @@ function Hero() {
               return (
                 <div
                   key={label as string}
-                  className="rounded-[8px] border border-[var(--line)] bg-white/76 p-3 text-center shadow-sm backdrop-blur"
+                  className="lift-on-hover rounded-[12px] border border-[var(--line)] bg-white/76 p-3 text-center shadow-sm backdrop-blur"
                 >
                   <FeatureIcon className="mx-auto mb-2 size-4 text-[var(--brand-blue)]" />
                   <p className="text-xs font-bold text-[var(--ink)]">{label as string}</p>
@@ -575,21 +618,37 @@ function Hero() {
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, scale: 0.96, y: 24 }}
           animate={reduceMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut", delay: 0.12 }}
-          className="relative mx-auto hidden w-full max-w-xl sm:block"
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
+          className="relative mx-auto w-full max-w-xl"
+          style={reduceMotion ? undefined : { y: photoY }}
         >
-          <div className="premium-ring relative aspect-[4/3] overflow-hidden rounded-[8px] bg-white">
-            <Image
-              src="/assets/petgres-hero-pets.webp"
-              alt="Cachorro e gato em ambiente limpo de cuidado pet"
-              fill
-              sizes="(min-width: 1024px) 520px, 92vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[rgba(17,50,80,0.44)] to-transparent" />
+          <div className="premium-frame relative">
+            <div className="premium-ring relative aspect-[4/3] overflow-hidden rounded-[12px] bg-white">
+              <Image
+                src="/assets/petgres-hero-pets.webp"
+                alt="Cachorro e gato em ambiente limpo de cuidado pet"
+                fill
+                sizes="(min-width: 1024px) 520px, 92vw"
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[rgba(7,30,60,0.55)] to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-2 rounded-full border border-white/40 bg-white/85 px-3 py-2 backdrop-blur">
+                <div className="flex items-center gap-2">
+                  <PawPrint className="size-4 text-[var(--brand-blue)]" />
+                  <span className="text-xs font-bold text-[var(--ink)]">
+                    Cães & gatos
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 text-xs font-bold text-[var(--brand-warm-strong)]">
+                  <Star className="size-3.5 fill-current" />
+                  Cuidado com carinho
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="absolute -left-4 -top-4 grid size-24 place-items-center rounded-full bg-white shadow-[0_18px_45px_rgba(16,48,82,0.16)]">
+          <div className="absolute -left-5 -top-5 grid size-20 place-items-center rounded-full bg-white shadow-[0_18px_45px_rgba(16,48,82,0.16)] sm:size-24">
             <Image
               src="/assets/petgres-logo-clean.png"
               alt="Petgres"
@@ -603,16 +662,17 @@ function Hero() {
             <motion.div
               key={floating.label}
               className={cn(
-                "absolute hidden rounded-full border border-white/80 bg-white/88 px-4 py-2 text-xs font-bold text-[var(--ink)] shadow-[0_16px_34px_rgba(16,48,82,0.16)] backdrop-blur sm:block",
+                "absolute hidden rounded-full border border-white/80 bg-white/90 px-4 py-2 text-xs font-bold shadow-[0_16px_34px_rgba(16,48,82,0.16)] backdrop-blur sm:block",
+                floating.color,
                 floating.className,
               )}
               animate={
                 reduceMotion
                   ? undefined
-                  : { y: [0, index % 2 ? -8 : 8, 0] }
+                  : { y: [0, index % 2 ? -10 : 10, 0] }
               }
               transition={{
-                duration: 4 + index * 0.35,
+                duration: 4 + index * 0.4,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
@@ -627,18 +687,44 @@ function Hero() {
 }
 
 function TrustStrip() {
+  const signals = [
+    {
+      title: "Rua Juá, 160",
+      description: "Atendimento local · bairro Saúde, SP",
+      icon: MapPin,
+      href: "#localizacao",
+    },
+    {
+      title: "Resposta rápida",
+      description: siteConfig.responseTime,
+      icon: WhatsAppIcon,
+      href: waGeneral,
+      external: true,
+    },
+    {
+      title: "Atendimento humano",
+      description: "Conversa direta, sem formulário frio",
+      icon: Sparkles,
+      href: waTrust,
+      external: true,
+    },
+  ];
+
   return (
-    <section className="bg-white px-4 py-5">
+    <section
+      aria-label="Sinais de confiança"
+      className="border-y border-[var(--line)] bg-white px-4 py-6"
+    >
       <div className="section-shell grid gap-3 md:grid-cols-3">
-        {trustSignals.map((signal) => (
+        {signals.map((signal) => (
           <a
             key={signal.title}
-            href={signal.title === "Agendamento direto" ? waGeneral : "#localizacao"}
-            target={signal.title === "Agendamento direto" ? "_blank" : undefined}
-            rel={signal.title === "Agendamento direto" ? "noreferrer" : undefined}
-            className="group flex items-start gap-3 rounded-[8px] border border-[var(--line)] bg-[#f7fbff] p-4 transition duration-300 hover:-translate-y-0.5 hover:border-[var(--brand-blue)] hover:bg-white hover:shadow-[0_16px_40px_rgba(7,103,201,0.1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+            href={signal.href}
+            target={signal.external ? "_blank" : undefined}
+            rel={signal.external ? "noreferrer" : undefined}
+            className="lift-on-hover group flex items-start gap-3 rounded-[12px] border border-[var(--line)] bg-[#f7fbff] p-4 hover:border-[var(--brand-blue)] hover:bg-white hover:shadow-[0_16px_40px_rgba(7,103,201,0.1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
           >
-            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white text-[var(--brand-blue)] shadow-sm">
+            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-white text-[var(--brand-blue)] shadow-sm transition group-hover:bg-[var(--brand-blue)] group-hover:text-white">
               <signal.icon className="size-5" />
             </span>
             <span>
@@ -662,28 +748,43 @@ function Services() {
       <div className="absolute inset-0 paw-pattern opacity-50" aria-hidden />
       <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white to-transparent" aria-hidden />
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent" aria-hidden />
+
       <div className="section-shell relative">
         <SectionIntro
           eyebrow="Serviços"
-          title="Tudo que a rotina do seu pet precisa, com atendimento próximo."
+          title="Tudo que a rotina do seu pet precisa, em um único lugar."
           description="A Petgres combina cuidado no banho e tosa com produtos e acessórios para deixar o dia a dia mais prático, confortável e seguro."
         />
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((service, index) => (
-            <MotionBlock key={service.title} delay={index * 0.04}>
-              <Card className="group h-full transition duration-300 hover:-translate-y-1 hover:border-[var(--brand-blue)] hover:shadow-[0_24px_60px_rgba(7,103,201,0.14)]">
-                <CardHeader>
-                  <div className="mb-4 grid size-12 place-items-center rounded-[8px] bg-[var(--soft-blue)] text-[var(--brand-blue)] transition group-hover:bg-[var(--brand-blue)] group-hover:text-white">
-                    <service.icon className="size-6" />
-                  </div>
-                  <CardTitle>{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>{service.description}</CardContent>
-              </Card>
+            <MotionBlock key={service.title} delay={index * 0.06}>
+              <article className="lift-on-hover group relative flex h-full flex-col overflow-hidden rounded-[16px] border border-[var(--line)] bg-white p-6 shadow-[var(--shadow-xs)] hover:border-[var(--brand-blue)] hover:shadow-[var(--shadow-lg)]">
+                <span
+                  aria-hidden
+                  className="absolute right-5 top-5 text-xs font-bold text-[var(--muted-soft)] tabular-nums"
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div className="mb-5 grid size-12 place-items-center rounded-[12px] bg-[var(--soft-blue)] text-[var(--brand-blue)] transition group-hover:bg-[var(--brand-blue)] group-hover:text-white">
+                  <service.icon className="size-6" />
+                </div>
+                <h3 className="text-lg font-bold tracking-tight text-[var(--ink)]">
+                  {service.title}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                  {service.description}
+                </p>
+                <span className="mt-5 inline-flex w-fit items-center gap-1.5 rounded-full bg-[var(--soft-warm)] px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[var(--brand-warm-strong)]">
+                  <CheckCircle2 className="size-3" />
+                  {service.highlight}
+                </span>
+              </article>
             </MotionBlock>
           ))}
         </div>
-        <MotionBlock className="mt-10 flex justify-center">
+
+        <MotionBlock className="mt-12 flex justify-center">
           <Button asChild variant="secondary">
             <a href={waTrust} target="_blank" rel="noreferrer">
               <WhatsAppIcon className="size-4 text-[#25D366]" />
@@ -707,19 +808,19 @@ function Grooming() {
           sizes="100vw"
           className="object-cover opacity-25"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#f7fbff]/95 via-[#f7fbff]/92 to-[#f7fbff]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#f7fbff]/96 via-[#f7fbff]/94 to-[#f7fbff]" />
         <div className="absolute inset-0 paw-pattern opacity-40" />
       </div>
 
-      <div className="section-shell relative grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-        <MotionBlock>
+      <div className="section-shell relative grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+        <MotionBlock className="lg:sticky lg:top-28">
           <SectionIntro
             align="left"
             eyebrow="Banho e Tosa"
-            title="Um processo cuidadoso do primeiro contato à finalização."
-            description="Cada etapa foi pensada para reduzir estresse, manter a higiene em dia e entregar um pet cheiroso, confortável e bem cuidado."
+            title="Um processo cuidadoso, do primeiro contato à finalização."
+            description="Cada etapa foi pensada para reduzir o estresse, manter a higiene em dia e entregar um pet cheiroso, confortável e bem cuidado."
           />
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Button asChild>
               <a href={waSchedule} target="_blank" rel="noreferrer">
                 <CalendarCheck />
@@ -729,34 +830,48 @@ function Grooming() {
             <Button asChild variant="secondary">
               <a href={`tel:+${siteConfig.whatsapp}`}>
                 <Phone />
-                Ligar para a Petgres
+                Ligar agora
               </a>
             </Button>
+          </div>
+          <div className="mt-8 flex items-center gap-3 rounded-[12px] border border-[var(--line)] bg-white/80 p-4 backdrop-blur">
+            <Clock className="size-5 shrink-0 text-[var(--brand-blue)]" />
+            <p className="text-sm leading-6 text-[var(--muted)]">
+              Atendimento de <strong className="text-[var(--ink)]">{siteConfig.hours.weekday.split("·")[1]?.trim()}</strong> nos dias úteis.
+            </p>
           </div>
         </MotionBlock>
 
         <MotionBlock delay={0.08}>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ol className="space-y-4">
             {groomingSteps.map((step, index) => (
-              <div
+              <li
                 key={step.title}
-                className="relative rounded-[8px] border border-[var(--line)] bg-white/95 p-5 shadow-sm backdrop-blur-sm"
+                className="step-connector lift-on-hover relative flex gap-5 rounded-[12px] border border-[var(--line)] bg-white/95 p-5 shadow-[var(--shadow-xs)] hover:border-[var(--brand-blue)] hover:shadow-[var(--shadow-md)] sm:p-6"
               >
-                <span className="absolute right-4 top-4 text-xs font-bold text-[var(--muted)]">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <div className="grid size-11 place-items-center rounded-full bg-[var(--soft-warm)] text-[var(--brand-blue)]">
+                <div className="relative grid size-12 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[var(--soft-warm)] to-white text-[var(--brand-blue)] ring-1 ring-[var(--line)]">
                   <step.icon className="size-5" />
+                  <span className="absolute -right-1 -top-1 grid size-6 place-items-center rounded-full bg-[var(--brand-blue)] text-[10px] font-bold tabular-nums text-white shadow-sm">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
                 </div>
-                <h3 className="mt-5 text-base font-bold text-[var(--ink)]">
-                  {step.title}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-                  {step.description}
-                </p>
-              </div>
+                <div className="flex-1">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="text-base font-bold text-[var(--ink)] sm:text-lg">
+                      {step.title}
+                    </h3>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--soft-blue)] px-2.5 py-0.5 text-[11px] font-bold text-[var(--brand-blue)]">
+                      <Clock className="size-3" />
+                      {step.duration}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                    {step.description}
+                  </p>
+                </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </MotionBlock>
       </div>
     </section>
@@ -774,16 +889,16 @@ function Products() {
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--brand-warm)]/70 to-transparent" aria-hidden />
 
       <div className="section-shell relative">
-        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+        <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
           <div className="max-w-xl">
-            <Badge className="mb-4 border-[var(--brand-warm)]/30 bg-[var(--brand-warm)]/10 text-[var(--brand-warm)]">
-              <Sparkles className="size-3.5" />
+            <span className="eyebrow inline-flex items-center gap-2 text-[var(--brand-warm)]">
+              <span className="h-px w-8 bg-[var(--brand-warm)]/60" aria-hidden />
               Curadoria Premium
-            </Badge>
-            <h2 className="text-balance text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
+            </span>
+            <h2 className="display-2 text-balance mt-5 text-white">
               Produtos selecionados para cuidar do seu pet entre uma visita e outra.
             </h2>
-            <p className="mt-4 text-base leading-7 text-white/76 sm:text-lg">
+            <p className="mt-5 text-pretty text-base leading-[1.7] text-white/76 sm:text-lg">
               Cada item foi escolhido pensando na qualidade, na rotina e no bem-estar do seu cão ou gato. Consulte a disponibilidade pelo WhatsApp.
             </p>
           </div>
@@ -799,23 +914,25 @@ function Products() {
 
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {productCategories.map((category, index) => (
-            <MotionBlock key={category.title} delay={index * 0.05}>
+            <MotionBlock key={category.title} delay={index * 0.06}>
               <a
                 href={waProducts}
                 target="_blank"
                 rel="noreferrer"
-                className="premium-product-card group flex h-full flex-col justify-between rounded-[10px] p-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-warm)]"
+                className="premium-product-card group flex h-full flex-col justify-between rounded-[14px] p-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-warm)]"
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="grid size-14 place-items-center rounded-[10px] bg-gradient-to-br from-[var(--brand-warm)] to-[#d99518] text-[#0a1f3d] shadow-[0_8px_24px_rgba(246,191,63,0.35)]">
+                    <div className="grid size-14 place-items-center rounded-[12px] bg-gradient-to-br from-[var(--brand-warm)] to-[#d99518] text-[#0a1f3d] shadow-[0_8px_24px_rgba(246,191,63,0.35)]">
                       <category.icon className="size-7" />
                     </div>
                     <span className="rounded-full border border-white/16 bg-white/[0.05] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white/72">
                       {category.tag}
                     </span>
                   </div>
-                  <h3 className="mt-6 text-xl font-bold text-white">{category.title}</h3>
+                  <h3 className="mt-6 text-xl font-bold tracking-tight text-white">
+                    {category.title}
+                  </h3>
                   <p className="mt-3 text-sm leading-6 text-white/72">
                     {category.description}
                   </p>
@@ -831,9 +948,9 @@ function Products() {
         </div>
 
         <MotionBlock className="mt-14">
-          <div className="rounded-[12px] border border-white/12 bg-white/[0.04] p-6 text-center backdrop-blur sm:p-8">
-            <p className="text-base text-white/80 sm:text-lg">
-              Não encontrou o que procura? Mande mensagem que a gente busca pra você.
+          <div className="rounded-[16px] border border-white/12 bg-white/[0.04] p-6 text-center backdrop-blur sm:p-8">
+            <p className="text-base text-white/82 sm:text-lg">
+              Não encontrou o que procura? Manda mensagem que a gente busca pra você.
             </p>
             <div className="mt-5 flex justify-center">
               <Button asChild variant="warm" size="lg">
@@ -854,57 +971,49 @@ function Gallery() {
   return (
     <section id="galeria" className="section-y px-4">
       <div className="section-shell">
-        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-          <div>
-            <SectionIntro
-              align="left"
-              eyebrow="Galeria"
-              title="Fotos reais devem ser a prova visual da Petgres."
-              description="A estrutura prioriza fachada, equipe, processo de banho e tosa e pets atendidos. Enquanto o acervo real não entra, nada aqui inventa depoimentos ou bastidores."
-            />
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Button asChild variant="secondary">
-                <a href={siteConfig.instagramUrl} target="_blank" rel="noreferrer">
-                  <InstagramIcon className="size-4" />
-                  Ver Instagram
-                </a>
-              </Button>
-              <Button asChild>
-                <a href={waGeneral} target="_blank" rel="noreferrer">
-                  <WhatsAppIcon className="size-4 text-[#25D366]" />
-                  Pedir fotos pelo WhatsApp
-                </a>
-              </Button>
-            </div>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {galleryPlaceholders.map((photo, index) => (
-              <MotionBlock key={photo.title} delay={index * 0.05}>
-                <div
-                  className={cn(
-                    "group flex aspect-[4/3] flex-col justify-between overflow-hidden rounded-[8px] border border-[var(--line)] p-5 shadow-sm",
-                    photo.color,
-                  )}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="grid size-11 place-items-center rounded-full bg-white text-[var(--brand-blue)] shadow-sm">
-                      <photo.icon className="size-5" />
-                    </div>
-                    <Camera className="size-5 text-[var(--muted)] transition group-hover:text-[var(--brand-blue)]" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-[var(--ink)]">
-                      {photo.title}
-                    </h3>
-                    <p className="mt-2 text-sm font-medium text-[var(--muted)]">
-                      Foto real em breve
-                    </p>
-                  </div>
+        <SectionIntro
+          eyebrow="Galeria"
+          title="Uma prévia visual da Petgres — fachada, equipe e cuidado em ação."
+          description="As ilustrações representam o ambiente real da loja. Em breve fotos próprias do dia a dia do atendimento."
+        />
+
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {galleryItems.map((photo, index) => (
+            <MotionBlock key={photo.title} delay={index * 0.06}>
+              <figure className="lift-on-hover group relative overflow-hidden rounded-[16px] border border-[var(--line)] bg-white shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-lg)]">
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={photo.src}
+                    alt={`Ilustração: ${photo.title}`}
+                    className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[rgba(7,30,60,0.4)] to-transparent" />
                 </div>
-              </MotionBlock>
-            ))}
-          </div>
+                <figcaption className="absolute bottom-3 left-3 right-3 rounded-[10px] border border-white/40 bg-white/92 px-3 py-2 backdrop-blur">
+                  <p className="text-sm font-bold text-[var(--ink)]">{photo.title}</p>
+                  <p className="text-xs text-[var(--muted)]">{photo.caption}</p>
+                </figcaption>
+              </figure>
+            </MotionBlock>
+          ))}
         </div>
+
+        <MotionBlock className="mt-12 flex flex-wrap justify-center gap-3">
+          <Button asChild variant="secondary">
+            <a href={siteConfig.instagramUrl} target="_blank" rel="noreferrer">
+              <InstagramIcon className="size-4" />
+              Ver Instagram
+            </a>
+          </Button>
+          <Button asChild>
+            <a href={waGeneral} target="_blank" rel="noreferrer">
+              <WhatsAppIcon className="size-4 text-white" />
+              Pedir fotos reais no WhatsApp
+            </a>
+          </Button>
+        </MotionBlock>
       </div>
     </section>
   );
@@ -921,27 +1030,40 @@ function Testimonials() {
           description="Cada laço, cada banho e cada tosa virou memória boa. Veja o que os tutores contam sobre o cuidado da Petgres."
         />
 
-        <div className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((testimonial, index) => (
-            <MotionBlock key={testimonial.name} delay={index * 0.08} className="flex justify-center">
+            <MotionBlock
+              key={testimonial.name}
+              delay={index * 0.1}
+              className="flex justify-center"
+            >
               <motion.figure
                 initial={{ rotate: testimonial.rotation }}
                 whileInView={{ rotate: testimonial.rotation }}
-                whileHover={{ rotate: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
+                whileHover={{ rotate: 0, scale: 1.03 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 className="polaroid w-full max-w-[300px] rounded-[6px]"
               >
+                <span className="polaroid-tape" aria-hidden />
                 <div className="polaroid-photo relative aspect-square">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={testimonial.photo}
-                    alt={`Retrato de ${testimonial.pet}, pet do depoimento`}
+                    alt={`Retrato de ${testimonial.pet}`}
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"
                   />
                 </div>
-                <figcaption className="mt-4 text-center">
-                  <p className="polaroid-caption text-2xl text-[var(--ink)] leading-none">
+                <figcaption className="mt-5 text-center">
+                  <div
+                    className="flex justify-center gap-0.5 text-[var(--brand-warm-strong)]"
+                    aria-label={`${testimonial.rating} de 5 estrelas`}
+                  >
+                    {Array.from({ length: testimonial.rating }).map((_, i) => (
+                      <Star key={i} className="size-3.5 fill-current" />
+                    ))}
+                  </div>
+                  <p className="polaroid-caption mt-2 text-[26px] leading-none text-[var(--ink)]">
                     {testimonial.pet} &amp; {testimonial.name}
                   </p>
                   <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
@@ -953,7 +1075,7 @@ function Testimonials() {
           ))}
         </div>
 
-        <MotionBlock className="mt-14 flex justify-center">
+        <MotionBlock className="mt-16 flex justify-center">
           <Button asChild variant="secondary">
             <a href={waGeneral} target="_blank" rel="noreferrer">
               <WhatsAppIcon className="size-4 text-[#25D366]" />
@@ -977,24 +1099,36 @@ function FaqQuestions() {
       <div className="section-shell relative">
         <SectionIntro
           eyebrow="Dúvidas frequentes"
-          title="As respostas para as perguntas que a gente mais recebe."
+          title="As respostas para o que a gente mais recebe."
           description="Se a sua dúvida não estiver aqui, fala com a gente pelo WhatsApp — a resposta sai rápida."
         />
 
-        <div className="mx-auto mt-12 grid max-w-3xl gap-3">
+        <div className="mx-auto mt-14 grid max-w-3xl gap-3">
           {faqItems.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
-              <MotionBlock key={faq.question} delay={index * 0.03}>
-                <div className="overflow-hidden rounded-[10px] border border-[var(--line)] bg-white shadow-[0_18px_45px_rgba(7,103,201,0.08)]">
+              <MotionBlock key={faq.question} delay={index * 0.04}>
+                <div
+                  className={cn(
+                    "overflow-hidden rounded-[14px] border bg-white shadow-[var(--shadow-sm)] transition-colors",
+                    isOpen ? "border-[var(--brand-blue)]" : "border-[var(--line)]",
+                  )}
+                >
                   <button
                     type="button"
                     aria-expanded={isOpen}
                     onClick={() => setOpenIndex(isOpen ? null : index)}
-                    className="faq-trigger flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition hover:bg-[var(--soft-blue)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] sm:px-6 sm:py-5"
+                    className="faq-trigger flex w-full items-center justify-between gap-4 px-5 py-5 text-left transition hover:bg-[var(--soft-blue)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] sm:px-6"
                   >
                     <span className="flex items-center gap-3">
-                      <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[var(--soft-blue)] text-[var(--brand-blue)]">
+                      <span
+                        className={cn(
+                          "grid size-9 shrink-0 place-items-center rounded-full transition",
+                          isOpen
+                            ? "bg-[var(--brand-blue)] text-white"
+                            : "bg-[var(--soft-blue)] text-[var(--brand-blue)]",
+                        )}
+                      >
                         <PawPrint className="size-4" />
                       </span>
                       <span className="text-base font-bold text-[var(--ink)] sm:text-lg">
@@ -1015,9 +1149,9 @@ function FaqQuestions() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.28, ease: "easeOut" }}
+                        transition={{ duration: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
                       >
-                        <div className="border-t border-[var(--line)] px-5 py-4 text-sm leading-7 text-[var(--muted)] sm:px-6 sm:py-5 sm:text-base">
+                        <div className="border-t border-[var(--line)] px-5 py-5 text-sm leading-7 text-[var(--muted)] sm:px-6 sm:text-base">
                           {faq.answer}
                         </div>
                       </motion.div>
@@ -1029,7 +1163,7 @@ function FaqQuestions() {
           })}
         </div>
 
-        <MotionBlock className="mt-12 flex justify-center">
+        <MotionBlock className="mt-14 flex justify-center">
           <Button asChild>
             <a href={waGeneral} target="_blank" rel="noreferrer">
               <WhatsAppIcon className="size-4 text-white" />
@@ -1047,18 +1181,34 @@ function Location() {
     <section id="localizacao" className="section-y px-4">
       <div className="section-shell grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-stretch">
         <MotionBlock>
-          <div className="flex h-full flex-col justify-between rounded-[8px] border border-[var(--line)] bg-white p-6 shadow-[0_18px_50px_rgba(16,48,82,0.08)] sm:p-8">
+          <div className="flex h-full flex-col justify-between rounded-[16px] border border-[var(--line)] bg-white p-6 shadow-[var(--shadow-md)] sm:p-8">
             <div>
-              <Badge>
-                <MapPin className="size-3.5" />
+              <span className="eyebrow inline-flex items-center gap-2 text-[var(--brand-blue)]">
+                <span className="h-px w-8 bg-[var(--brand-blue)]/60" aria-hidden />
                 Localização
-              </Badge>
-              <h2 className="mt-5 text-balance text-3xl font-bold leading-tight text-[var(--ink)] sm:text-4xl">
+              </span>
+              <h2 className="display-2 text-balance mt-5 text-[var(--ink)]">
                 Petgres no bairro Saúde, perto da sua rotina.
               </h2>
-              <p className="mt-4 text-base leading-7 text-[var(--muted)]">
+              <p className="mt-5 text-base leading-7 text-[var(--muted)]">
                 {siteConfig.address}
               </p>
+
+              <dl className="mt-7 space-y-2.5">
+                {[
+                  siteConfig.hours.weekday,
+                  siteConfig.hours.saturday,
+                  siteConfig.hours.sunday,
+                ].map((line) => (
+                  <div
+                    key={line}
+                    className="flex items-center gap-3 rounded-[10px] border border-[var(--line)] bg-[#f7fbff] px-3.5 py-2.5"
+                  >
+                    <Clock className="size-4 shrink-0 text-[var(--brand-blue)]" />
+                    <dd className="text-sm font-semibold text-[var(--ink)]">{line}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
             <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
               <Button asChild>
@@ -1070,7 +1220,7 @@ function Location() {
               <Button asChild variant="secondary">
                 <a href={waGeneral} target="_blank" rel="noreferrer">
                   <WhatsAppIcon className="size-4 text-[#25D366]" />
-                  WhatsApp
+                  Falar no WhatsApp
                 </a>
               </Button>
             </div>
@@ -1078,7 +1228,7 @@ function Location() {
         </MotionBlock>
 
         <MotionBlock delay={0.08}>
-          <div className="map-frame relative h-[360px] overflow-hidden rounded-[8px] border border-[var(--line)] bg-[var(--soft-blue)] shadow-[0_18px_50px_rgba(16,48,82,0.08)] lg:h-full">
+          <div className="map-frame relative h-[400px] overflow-hidden rounded-[16px] border border-[var(--line)] bg-[var(--soft-blue)] shadow-[var(--shadow-md)] lg:h-full">
             <div className="absolute inset-0 grid place-items-center p-6 text-center text-[var(--ink)]">
               <div>
                 <MapPin className="mx-auto size-9 text-[var(--brand-blue)]" />
@@ -1093,7 +1243,7 @@ function Location() {
               referrerPolicy="no-referrer-when-downgrade"
               allowFullScreen
             />
-            <div className="absolute bottom-4 left-4 right-4 z-20 rounded-[8px] border border-[var(--line)] bg-white/92 px-4 py-3 text-sm font-semibold text-[var(--ink)] shadow-sm backdrop-blur sm:right-auto">
+            <div className="absolute bottom-4 left-4 right-4 z-20 rounded-[12px] border border-[var(--line)] bg-white/92 px-4 py-3 text-sm font-semibold text-[var(--ink)] shadow-sm backdrop-blur sm:right-auto">
               {siteConfig.address}
             </div>
           </div>
@@ -1107,6 +1257,7 @@ function Contact() {
   const contacts = [
     {
       label: "WhatsApp",
+      hint: "Resposta em até 15 min",
       value: siteConfig.whatsappDisplay,
       href: waGeneral,
       icon: WhatsAppIcon,
@@ -1115,6 +1266,7 @@ function Contact() {
     },
     {
       label: "E-mail",
+      hint: "Dúvidas mais detalhadas",
       value: siteConfig.email,
       href: `mailto:${siteConfig.email}`,
       icon: Mail,
@@ -1123,6 +1275,7 @@ function Contact() {
     },
     {
       label: "Instagram",
+      hint: "Bastidores e novidades",
       value: `@${siteConfig.instagram}`,
       href: siteConfig.instagramUrl,
       icon: InstagramIcon,
@@ -1134,37 +1287,43 @@ function Contact() {
   return (
     <section id="contato" className="section-y bg-white px-4">
       <div className="section-shell">
-        <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
+        <div className="grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
           <SectionIntro
             align="left"
             eyebrow="Contato"
-            title="Fale com a Petgres do jeito mais fácil para você."
-            description="Agende banho e tosa, consulte produtos e tire dúvidas diretamente pelos canais oficiais."
+            title="Fale com a Petgres do jeito mais fácil pra você."
+            description="Agende banho e tosa, consulte produtos e tire dúvidas direto pelos canais oficiais."
           />
           <div className="grid gap-4 sm:grid-cols-3">
-            {contacts.map((contact) => {
+            {contacts.map((contact, index) => {
               const Icon = contact.icon;
               return (
-                <a
-                  key={contact.label}
-                  href={contact.href}
-                  target={contact.external ? "_blank" : undefined}
-                  rel={contact.external ? "noreferrer" : undefined}
-                  className="group rounded-[8px] border border-[var(--line)] bg-[#f7fbff] p-5 transition duration-300 hover:-translate-y-1 hover:border-[var(--brand-blue)] hover:bg-white hover:shadow-[0_20px_50px_rgba(7,103,201,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <Icon className={cn("size-6", contact.iconClass)} />
-                    {contact.external ? (
-                      <ExternalLink className="size-4 text-[var(--muted)]" />
-                    ) : null}
-                  </div>
-                  <p className="mt-5 text-sm font-semibold text-[var(--muted)]">
-                    {contact.label}
-                  </p>
-                  <p className="mt-1 break-words text-base font-bold text-[var(--ink)]">
-                    {contact.value}
-                  </p>
-                </a>
+                <MotionBlock key={contact.label} delay={index * 0.06}>
+                  <a
+                    href={contact.href}
+                    target={contact.external ? "_blank" : undefined}
+                    rel={contact.external ? "noreferrer" : undefined}
+                    className="lift-on-hover group flex h-full flex-col rounded-[16px] border border-[var(--line)] bg-[#f7fbff] p-5 hover:border-[var(--brand-blue)] hover:bg-white hover:shadow-[0_20px_50px_rgba(7,103,201,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="grid size-12 place-items-center rounded-[12px] bg-white shadow-sm">
+                        <Icon className={cn("size-6", contact.iconClass)} />
+                      </span>
+                      {contact.external ? (
+                        <ExternalLink className="size-4 text-[var(--muted)] transition group-hover:translate-x-0.5 group-hover:text-[var(--brand-blue)]" />
+                      ) : null}
+                    </div>
+                    <p className="mt-5 text-xs font-bold uppercase tracking-wider text-[var(--muted)]">
+                      {contact.label}
+                    </p>
+                    <p className="mt-1.5 break-words text-lg font-bold text-[var(--ink)]">
+                      {contact.value}
+                    </p>
+                    <p className="mt-2 text-sm leading-5 text-[var(--muted)]">
+                      {contact.hint}
+                    </p>
+                  </a>
+                </MotionBlock>
               );
             })}
           </div>
@@ -1176,21 +1335,21 @@ function Contact() {
 
 function FinalCta() {
   return (
-    <section className="px-4 pb-16">
-      <div className="section-shell overflow-hidden rounded-[8px] bg-[var(--brand-blue)] text-white shadow-[0_26px_70px_rgba(7,103,201,0.25)]">
-        <div className="relative grid gap-8 p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center lg:p-12">
-          <div className="absolute right-8 top-8 hidden text-white/12 lg:block">
-            <Cat className="size-32" />
+    <section className="px-4 pb-20">
+      <div className="section-shell overflow-hidden rounded-[20px] bg-gradient-to-br from-[var(--brand-blue)] via-[#0865c5] to-[var(--brand-blue-strong)] text-white shadow-[var(--shadow-xl)]">
+        <div className="relative grid gap-8 p-8 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center lg:p-14">
+          <div className="absolute -right-12 -top-12 hidden text-white/8 lg:block" aria-hidden>
+            <PawPrint className="size-64" />
           </div>
           <div className="relative">
-            <Badge className="border-white/22 bg-white/12 text-white">
-              <Sparkles className="size-3.5" />
+            <span className="eyebrow inline-flex items-center gap-2 text-[var(--brand-warm)]">
+              <span className="h-px w-8 bg-[var(--brand-warm)]/60" aria-hidden />
               Atendimento Petgres
-            </Badge>
-            <h2 className="mt-5 text-balance text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">
+            </span>
+            <h2 className="display-2 text-balance mt-5">
               Seu pet merece cuidado de verdade.
             </h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-white/78 sm:text-lg">
+            <p className="mt-5 max-w-2xl text-pretty text-base leading-7 text-white/82 sm:text-lg">
               Agende um horário ou fale com a Petgres pelo WhatsApp para cuidar
               do seu melhor amigo com carinho e segurança.
             </p>
@@ -1205,7 +1364,7 @@ function FinalCta() {
             <Button
               asChild
               size="lg"
-              className="border border-white/32 bg-white text-[var(--brand-blue)] hover:bg-white/92"
+              className="border border-white/30 bg-white text-[var(--brand-blue)] hover:bg-white/95"
             >
               <a href={waGeneral} target="_blank" rel="noreferrer">
                 <WhatsAppIcon className="size-4 text-[#25D366]" />
@@ -1243,7 +1402,7 @@ function FloatingWhatsApp() {
           initial={{ opacity: 0, y: 18, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 12, scale: 0.98 }}
-          transition={{ duration: 0.28, ease: "easeOut" }}
+          transition={{ duration: 0.28, ease: [0.22, 0.61, 0.36, 1] }}
           className="fixed inset-x-4 bottom-[calc(0.875rem+env(safe-area-inset-bottom))] z-50 flex h-12 items-center justify-center gap-2 rounded-full bg-[var(--brand-blue)] px-5 text-sm font-bold text-white shadow-[0_18px_45px_rgba(0,83,178,0.32)] ring-1 ring-white/70 md:hidden"
           aria-label="Agendar atendimento pelo WhatsApp"
         >
@@ -1257,8 +1416,8 @@ function FloatingWhatsApp() {
 
 function Footer() {
   return (
-    <footer className="bg-[var(--footer-blue)] px-4 py-12 text-white">
-      <div className="section-shell grid gap-8 md:grid-cols-[1fr_auto_auto]">
+    <footer className="bg-[var(--footer-blue)] px-4 py-14 text-white">
+      <div className="section-shell grid gap-10 md:grid-cols-[1.2fr_auto_auto]">
         <div>
           <div className="flex items-center gap-3">
             <span className="grid size-14 place-items-center overflow-hidden rounded-full bg-white">
@@ -1272,15 +1431,21 @@ function Footer() {
             </span>
             <div>
               <p className="text-lg font-bold text-white">Petgres</p>
-              <p className="text-sm text-white/72">Petshop no bairro Saúde</p>
+              <p className="text-sm text-white/72">Petshop no bairro Saúde · SP</p>
             </div>
           </div>
-          <p className="mt-5 max-w-md text-sm leading-6 text-white/72">
+          <p className="mt-6 max-w-md text-sm leading-6 text-white/72">
             Banho e tosa, produtos, acessórios e atendimento com carinho para
             cães e gatos em São Paulo/SP.
           </p>
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[var(--brand-green)]/30 bg-[var(--brand-green)]/10 px-3 py-1.5 text-xs font-bold text-[var(--brand-green)]">
+            <span className="live-dot" aria-hidden />
+            Atendendo agora
+          </div>
         </div>
-        <nav aria-label="Links rápidos" className="grid gap-2 text-sm">
+
+        <nav aria-label="Links rápidos" className="grid gap-2.5 text-sm">
+          <p className="eyebrow text-white/60">Navegar</p>
           {navItems.map((nav) => (
             <a
               key={nav.href}
@@ -1291,7 +1456,9 @@ function Footer() {
             </a>
           ))}
         </nav>
-        <div className="grid gap-2 text-sm text-white/76">
+
+        <div className="grid gap-2.5 text-sm text-white/76">
+          <p className="eyebrow text-white/60">Contato</p>
           <a
             className="flex items-center gap-2 font-semibold text-white/86 hover:text-white"
             href={waGeneral}
@@ -1321,9 +1488,13 @@ function Footer() {
             <MapPin className="mt-0.5 size-4 shrink-0" />
             {siteConfig.address}
           </span>
+          <span className="flex items-start gap-2 text-white/72">
+            <Clock className="mt-0.5 size-4 shrink-0" />
+            {siteConfig.hours.weekday}
+          </span>
         </div>
       </div>
-      <div className="section-shell mt-8 flex flex-col gap-2 border-t border-white/12 pt-6 text-xs text-white/64 sm:flex-row sm:items-center sm:justify-between">
+      <div className="section-shell mt-10 flex flex-col gap-2 border-t border-white/12 pt-6 text-xs text-white/64 sm:flex-row sm:items-center sm:justify-between">
         <span>© {new Date().getFullYear()} Petgres. Todos os direitos reservados.</span>
         <span>Cuidado local, atendimento próximo.</span>
       </div>
@@ -1333,21 +1504,26 @@ function Footer() {
 
 export function PetgresLanding() {
   return (
-    <main className="pb-20 md:pb-0">
-      <Header />
-      <Hero />
-      <TrustStrip />
-      <Services />
-      <Grooming />
-      <Products />
-      <Gallery />
-      <Testimonials />
-      <FaqQuestions />
-      <Location />
-      <Contact />
-      <FinalCta />
-      <Footer />
-      <FloatingWhatsApp />
-    </main>
+    <>
+      <a href="#conteudo" className="skip-link">
+        Pular para o conteúdo
+      </a>
+      <main id="conteudo" className="pb-20 md:pb-0">
+        <Header />
+        <Hero />
+        <TrustStrip />
+        <Services />
+        <Grooming />
+        <Products />
+        <Gallery />
+        <Testimonials />
+        <FaqQuestions />
+        <Location />
+        <Contact />
+        <FinalCta />
+        <Footer />
+        <FloatingWhatsApp />
+      </main>
+    </>
   );
 }

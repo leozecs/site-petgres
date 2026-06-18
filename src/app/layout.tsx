@@ -1,8 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Caveat } from "next/font/google";
+import { Caveat, Inter } from "next/font/google";
 import "./globals.css";
 
 import { siteConfig } from "@/lib/site";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 const caveat = Caveat({
   subsets: ["latin"],
@@ -115,7 +122,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="pt-BR" className={caveat.variable}>
+    <html lang="pt-BR" className={`${inter.variable} ${caveat.variable}`}>
       <body>
         <script
           type="application/ld+json"
