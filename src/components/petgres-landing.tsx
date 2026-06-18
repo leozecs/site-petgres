@@ -170,47 +170,41 @@ const vetServices: Array<IconItem & { tag: string }> = [
   },
 ];
 
-const groomingSteps: Array<IconItem & { duration: string }> = [
+const groomingSteps: IconItem[] = [
   {
     title: "Recepção",
     description:
       "Boas-vindas tranquilas e cadastro rápido, respeitando o tempo de adaptação do pet.",
-    duration: "5–10 min",
     icon: Users,
   },
   {
     title: "Avaliação",
     description:
       "Análise da pelagem, da pele e de cuidados específicos antes de iniciar o banho.",
-    duration: "5 min",
     icon: BadgeCheck,
   },
   {
     title: "Banho",
     description:
       "Shampoo escolhido para o tipo de pelo, com água em temperatura agradável.",
-    duration: "15–25 min",
     icon: Droplets,
   },
   {
     title: "Secagem",
     description:
       "Secadores em potência segura para conforto e proteção da pele do pet.",
-    duration: "20–30 min",
     icon: Wind,
   },
   {
     title: "Tosa",
     description:
       "Tosa higiênica ou estética, sempre alinhada com o tutor antes de começar.",
-    duration: "15–40 min",
     icon: Scissors,
   },
   {
     title: "Finalização",
     description:
       "Perfume suave, laço ou gravatinha e devolução do pet pronto para casa.",
-    duration: "5 min",
     icon: Sparkles,
   },
 ];
@@ -592,15 +586,11 @@ function Hero() {
           animate="visible"
           className="max-w-3xl"
         >
-          <motion.div variants={item} className="flex flex-wrap items-center gap-2">
+          <motion.div variants={item}>
             <Badge>
               <PawPrint className="size-3.5" />
               Petshop no bairro Saúde
             </Badge>
-            <span className="inline-flex items-center gap-2 rounded-full border border-[var(--brand-green)]/30 bg-[var(--brand-green)]/10 px-3 py-1 text-xs font-bold text-[var(--brand-green)]">
-              <span className="live-dot" aria-hidden />
-              Atendendo agora
-            </span>
           </motion.div>
           <motion.h1
             variants={item}
@@ -879,12 +869,6 @@ function Grooming() {
               </a>
             </Button>
           </div>
-          <div className="mt-8 flex items-center gap-3 rounded-[12px] border border-[var(--line)] bg-white/80 p-4 backdrop-blur">
-            <Clock className="size-5 shrink-0 text-[var(--brand-blue)]" />
-            <p className="text-sm leading-6 text-[var(--muted)]">
-              Atendimento de <strong className="text-[var(--ink)]">{siteConfig.hours.weekday.split("·")[1]?.trim()}</strong> nos dias úteis.
-            </p>
-          </div>
         </MotionBlock>
 
         <MotionBlock delay={0.08}>
@@ -901,15 +885,9 @@ function Grooming() {
                   </span>
                 </div>
                 <div className="flex-1">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="text-base font-bold text-[var(--ink)] sm:text-lg">
-                      {step.title}
-                    </h3>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--soft-blue)] px-2.5 py-0.5 text-[11px] font-bold text-[var(--brand-blue)]">
-                      <Clock className="size-3" />
-                      {step.duration}
-                    </span>
-                  </div>
+                  <h3 className="text-base font-bold text-[var(--ink)] sm:text-lg">
+                    {step.title}
+                  </h3>
                   <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
                     {step.description}
                   </p>
@@ -1579,10 +1557,6 @@ function Footer() {
             Banho e tosa, produtos, acessórios e atendimento com carinho para
             cães e gatos em São Paulo/SP.
           </p>
-          <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[var(--brand-green)]/30 bg-[var(--brand-green)]/10 px-3 py-1.5 text-xs font-bold text-[var(--brand-green)]">
-            <span className="live-dot" aria-hidden />
-            Atendendo agora
-          </div>
         </div>
 
         <nav aria-label="Links rápidos" className="grid gap-2.5 text-sm">
