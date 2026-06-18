@@ -1223,8 +1223,19 @@ function FaqQuestions() {
 
   return (
     <section id="faq" className="relative section-y px-4 overflow-hidden">
-      <div className="absolute inset-0 checker-pattern" aria-hidden />
-      <div className="absolute inset-0 checker-overlay" aria-hidden />
+      <div
+        className="absolute inset-0 bg-gradient-to-b from-[#dfedfb] via-[var(--soft-blue)] to-[#dfedfb]"
+        aria-hidden
+      />
+      <div className="absolute inset-0 paw-pattern opacity-40" aria-hidden />
+      <div
+        className="absolute -left-32 top-20 h-[320px] w-[320px] rounded-full bg-gradient-to-tr from-[var(--brand-cyan)]/15 to-transparent blur-3xl"
+        aria-hidden
+      />
+      <div
+        className="absolute -right-32 bottom-20 h-[320px] w-[320px] rounded-full bg-gradient-to-bl from-[var(--brand-blue)]/15 to-transparent blur-3xl"
+        aria-hidden
+      />
 
       <div className="section-shell relative">
         <SectionIntro
