@@ -239,51 +239,46 @@ const productCategories: Array<IconItem & { tag: string }> = [
 const galleryItems = [
   {
     title: "Fachada na Rua Juá",
-    caption: "Entrada da loja",
+    caption: "Rua Juá, 160",
     src: "/assets/gallery/storefront.svg",
-  },
-  {
-    title: "Equipe Petgres",
-    caption: "Atendimento próximo",
-    src: "/assets/gallery/team.svg",
+    alt: "Localização da Petgres na Rua Juá, 160",
   },
   {
     title: "Banho e tosa",
-    caption: "Processo cuidadoso",
-    src: "/assets/gallery/grooming.svg",
+    caption: "Banho com cuidado e atenção",
+    src: "/assets/petgres-banho-tosa.jpeg",
+    alt: "Cachorro durante banho e tosa na Petgres",
   },
   {
     title: "Pets atendidos",
-    caption: "Sempre felizes",
-    src: "/assets/gallery/happy-pets.svg",
+    caption: "Clientes de quatro patas",
+    src: "/assets/petgres-pets-atendidos.jpeg",
+    alt: "Cachorro atendido pela Petgres usando gravata",
   },
 ];
 
 const testimonials = [
   {
-    name: "Carla S.",
-    pet: "Theo",
-    photo: "/assets/testimonials/pet-theo.svg",
+    name: "Pitter",
+    photo: "/assets/petgres-pitter.jpeg",
     quote:
-      "O Theo voltou cheirosinho e super calminho. Atendimento atencioso do início ao fim.",
-    rotation: -2.6,
+      "Eu sou o Pitter e já chego abanando tudo. Na Petgres eu sou recebido com carinho, meu banho fica caprichado e eu saio todo feliz, cheiroso e pronto para ganhar elogios.",
+    rotation: -2.4,
     rating: 5,
   },
   {
-    name: "Renata M.",
-    pet: "Mia",
-    photo: "/assets/testimonials/pet-mia.svg",
+    name: "Bruce",
+    photo: "/assets/petgres-bruce.jpeg",
     quote:
-      "A Mia é uma gatinha tímida e foi recebida com toda a paciência. Saiu macia e perfumada.",
-    rotation: 1.6,
+      "Eu sou o Bruce, chego no estilo e saio mais estiloso ainda. A galera da Petgres cuida de mim na moral: banho tranquilo, carinho de sobra e aquele visual de respeito.",
+    rotation: 1.8,
     rating: 5,
   },
   {
-    name: "Bruno A.",
-    pet: "Luna",
-    photo: "/assets/testimonials/pet-luna.svg",
+    name: "Lina",
+    photo: "/assets/petgres-lina.jpeg",
     quote:
-      "Banho e tosa impecáveis. A Luna ama vir aqui — isso já diz tudo sobre o cuidado.",
+      "Eu sou a Lina. Gosto de cuidado calmo e delicado, e na Petgres me tratam com muita paciência. Saio limpinha, tranquila e me sentindo muito bem cuidada.",
     rotation: -1.2,
     rating: 5,
   },
@@ -1081,11 +1076,11 @@ function Gallery() {
       <div className="section-shell">
         <SectionIntro
           eyebrow="Galeria"
-          title="Uma prévia visual da Petgres — fachada, equipe e cuidado em ação."
-          description="As ilustrações representam o ambiente real da loja. Em breve fotos próprias do dia a dia do atendimento."
+          title="Momentos reais da Petgres, com cuidado em cada detalhe."
+          description="Veja registros reais da rotina da Petgres: banho e tosa, pets atendidos e a loja na Rua Juá, 160, na Vila Mariana."
         />
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {galleryItems.map((photo, index) => (
             <MotionBlock key={photo.title} delay={index * 0.06}>
               <figure className="lift-on-hover group relative overflow-hidden rounded-[16px] border border-[var(--line)] bg-white shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-lg)]">
@@ -1093,7 +1088,7 @@ function Gallery() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={photo.src}
-                    alt={`Ilustração: ${photo.title}`}
+                    alt={photo.alt}
                     className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
                     loading="lazy"
                   />
@@ -1118,7 +1113,7 @@ function Gallery() {
           <Button asChild>
             <a href={waGeneral} target="_blank" rel="noreferrer">
               <WhatsAppIcon className="size-4 text-white" />
-              Pedir fotos reais no WhatsApp
+              Agendar pelo WhatsApp
             </a>
           </Button>
         </MotionBlock>
@@ -1134,8 +1129,8 @@ function Testimonials() {
       <div className="section-shell relative">
         <SectionIntro
           eyebrow="Depoimentos"
-          title="Histórias reais de quem confia o pet à Petgres."
-          description="Cada laço, cada banho e cada tosa virou memória boa. Veja o que os tutores contam sobre o cuidado da Petgres."
+          title="Quem passa pela Petgres sai cheio de estilo."
+          description="Alguns clientes de quatro patas que já passaram por aqui mostram o cuidado da Petgres no dia a dia."
         />
 
         <div className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
@@ -1157,7 +1152,7 @@ function Testimonials() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={testimonial.photo}
-                    alt={`Retrato de ${testimonial.pet}`}
+                    alt={`Retrato de ${testimonial.name} após atendimento na Petgres`}
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"
                   />
@@ -1172,7 +1167,7 @@ function Testimonials() {
                     ))}
                   </div>
                   <p className="polaroid-caption mt-2 text-[26px] leading-none text-[var(--ink)]">
-                    {testimonial.pet} &amp; {testimonial.name}
+                    {testimonial.name}
                   </p>
                   <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
                     “{testimonial.quote}”
