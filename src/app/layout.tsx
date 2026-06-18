@@ -1,7 +1,15 @@
 import type { Metadata, Viewport } from "next";
+import { Caveat } from "next/font/google";
 import "./globals.css";
 
 import { siteConfig } from "@/lib/site";
+
+const caveat = Caveat({
+  subsets: ["latin"],
+  weight: ["500", "700"],
+  variable: "--font-caveat",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://petgres.com.br"),
@@ -107,7 +115,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={caveat.variable}>
       <body>
         <script
           type="application/ld+json"

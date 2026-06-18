@@ -932,12 +932,12 @@ function Testimonials() {
                 className="polaroid w-full max-w-[300px] rounded-[6px]"
               >
                 <div className="polaroid-photo relative aspect-square">
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={testimonial.photo}
                     alt={`Retrato de ${testimonial.pet}, pet do depoimento`}
-                    fill
-                    sizes="(min-width: 1024px) 300px, 80vw"
-                    className="object-cover"
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
                   />
                 </div>
                 <figcaption className="mt-4 text-center">
