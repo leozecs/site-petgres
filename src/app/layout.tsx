@@ -105,6 +105,7 @@ export default function RootLayout({
     telephone: `+${siteConfig.whatsapp}`,
     email: siteConfig.email,
     sameAs: [siteConfig.instagramUrl],
+    openingHours: ["Mo-Fr 09:00-18:00", "Sa 09:00-16:00"],
     address: {
       "@type": "PostalAddress",
       streetAddress: siteConfig.streetAddress,

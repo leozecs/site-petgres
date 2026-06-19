@@ -13,8 +13,8 @@ export const siteConfig = {
   instagram: "petgres_",
   instagramUrl: "https://www.instagram.com/petgres_/",
   hours: {
-    weekday: "Seg a Sex · 9h às 19h",
-    saturday: "Sábado · 9h às 17h",
+    weekday: "Seg a Sex · 9h às 18h",
+    saturday: "Sábado · 9h às 16h",
     sunday: "Domingo · Fechado",
   },
   responseTime: "Resposta em até 15 min no WhatsApp",

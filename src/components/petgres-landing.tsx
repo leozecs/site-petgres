@@ -240,8 +240,8 @@ const galleryItems = [
   {
     title: "Fachada na Rua Juá",
     caption: "Rua Juá, 160",
-    src: "/assets/gallery/storefront.svg",
-    alt: "Localização da Petgres na Rua Juá, 160",
+    src: "/assets/petgres-fachada.jpeg",
+    alt: "Fachada azul da Petgres na Rua Juá, 160",
   },
   {
     title: "Banho e tosa",
