@@ -1385,6 +1385,7 @@ function Contact() {
       href: `mailto:${siteConfig.email}`,
       icon: Mail,
       iconClass: "text-[var(--brand-blue)]",
+      valueClass: "whitespace-nowrap text-base leading-6 sm:text-[15px] xl:text-lg",
       external: false,
     },
     {
@@ -1430,7 +1431,12 @@ function Contact() {
                     <p className="mt-5 text-xs font-bold uppercase tracking-wider text-[var(--muted)]">
                       {contact.label}
                     </p>
-                    <p className="mt-1.5 break-words text-lg font-bold text-[var(--ink)]">
+                    <p
+                      className={cn(
+                        "mt-1.5 font-bold text-[var(--ink)]",
+                        contact.valueClass ?? "break-words text-lg",
+                      )}
+                    >
                       {contact.value}
                     </p>
                     <p className="mt-2 text-sm leading-5 text-[var(--muted)]">
